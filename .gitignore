@@ -10,5 +10,8 @@ __pycache__/
 *.py[cod]
 *.pyc
 
+# Ignore test
+tests/
 # Ignore base de données (TinyDB)
 data/joueurs/*.json
+data/tournaments/*.json
