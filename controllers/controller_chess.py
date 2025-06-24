@@ -14,7 +14,7 @@ class Controler:
 
     def ajouter_joueur(self):
         info_joueur = self.view.input_joueur()
-        info_joueur[2] = datetime.strptime(info_joueur[2], "%d/%m/%y").date()
+        info_joueur[2] = datetime.strptime(info_joueur[2], "%d/%m/%Y").date()
 
         return Joueur(info_joueur[0], info_joueur[1], info_joueur[2], info_joueur[3])
 
