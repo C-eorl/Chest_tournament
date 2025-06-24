@@ -1,0 +1,14 @@
+# Environnement virtuel
+venv/
+.venv/
+
+# Fichiers PyCharm / IntelliJ
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Ignore base de données (TinyDB)
+data/joueurs/*.json
