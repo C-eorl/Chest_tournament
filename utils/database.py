@@ -9,17 +9,22 @@ PATH_JOUEURS ="../data/joueurs/joueurs.json"
 PATH_TOURNOIS ="../data/tournaments/tournois.json"
 
 
-def initialisation_db(path):
+def initialisation_db():
     """
-    Vérifie l'existance du dossier et du fichier .json
-    :param path:
-    :return:
+    Vérifie si les fichiers JSON et les dossiers parents existent, sinon, les créent
+    :return: None
     """
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-
-    if not os.path.exists(path) or os.stat(path).st_size == 0:
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump({}, f)  # initialise avec un objet vide
+    for path in [PATH_JOUEURS, PATH_TOURNOIS]:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        nom_fichier = os.path.basename(path)
+        if not os.path.exists(path) or os.stat(path).st_size == 0:
+            print("")
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump({}, f, indent=4, ensure_ascii=False)
+                nom_fichier = os.path.basename(path)
+                print(f"Creation de la base de donnée {nom_fichier}")
+        else:
+            print(f"La base de donnée {nom_fichier} existe déjà")
 
 
 def format_db(path: str):
@@ -39,8 +44,15 @@ def format_db(path: str):
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 
+def get_db_joueurs() -> TinyDB:
+    return TinyDB(PATH_JOUEURS)
+
+
+def get_db_tournoi() -> TinyDB:
+    return TinyDB(PATH_TOURNOIS)
+
 
 if __name__ == "__main__":
     for path in [PATH_JOUEURS, PATH_TOURNOIS]:
-        initialisation_db(path)
+        initialisation_db()
         format_db(path)
