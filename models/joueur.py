@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from tinydb import TinyDB, Query
+from tinydb import Query
 from utils import database
 
 
@@ -23,6 +23,16 @@ class Joueur:
 
     def __str__(self):
         return f"{self.id_echec}: {self.nom} {self.prenom}, né le {self.date_naissance.strftime("%d/%m/%Y")}"
+
+    def __lt__(self, other):
+        """ dunder pour inférieur que """
+        if isinstance(other, Joueur):
+            return self.score < other.score
+
+    def __eq__(self, other):
+        """ dunder pour egal """
+        if isinstance(other, Joueur):
+            return self.score == other.score
 
     def save_joueur(self):
         """
