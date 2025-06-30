@@ -12,6 +12,10 @@ __pycache__/
 
 # Ignore test
 tests/
+
 # Ignore base de données (TinyDB)
 data/joueurs/*.json
 data/tournaments/*.json
+
+# ignore fichier configuration
+.env
