@@ -1,30 +1,31 @@
 import json
 import os
-from datetime import date
 
-from tinydb import TinyDB
-from models.joueur import Joueur
-
-PATH_JOUEURS ="../data/joueurs/joueurs.json"
-PATH_TOURNOIS ="../data/tournaments/tournois.json"
+from tinydb import TinyDB, Query
+from dotenv import load_dotenv
 
 
-def initialisation_db():
+load_dotenv()
+
+PATH_PLAYERS = os.getenv("PATH_PLAYERS")
+PATH_TOURNAMENTS = os.getenv("PATH_TOURNAMENTS")
+
+def initialization_db():
     """
     Vérifie si les fichiers JSON et les dossiers parents existent, sinon, les créent
     :return: None
     """
-    for path in [PATH_JOUEURS, PATH_TOURNOIS]:
+    for path in [PATH_PLAYERS, PATH_TOURNAMENTS]:
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        nom_fichier = os.path.basename(path)
+        name_file = os.path.basename(path)
         if not os.path.exists(path) or os.stat(path).st_size == 0:
             print("")
             with open(path, "w", encoding="utf-8") as f:
                 json.dump({}, f, indent=4, ensure_ascii=False)
-                nom_fichier = os.path.basename(path)
-                print(f"Creation de la base de donnée {nom_fichier}")
+                name_file = os.path.basename(path)
+                print(f"Creation de la base de donnée {name_file}")
         else:
-            print(f"La base de donnée {nom_fichier} existe déjà")
+            print(f"La base de donnée {name_file} existe déjà")
 
 
 def format_db(path: str):
@@ -43,16 +44,48 @@ def format_db(path: str):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
+def get_db_player() -> TinyDB:
+    return TinyDB(PATH_PLAYERS)
 
-def get_db_joueurs() -> TinyDB:
-    return TinyDB(PATH_JOUEURS)
-
-
-def get_db_tournoi() -> TinyDB:
-    return TinyDB(PATH_TOURNOIS)
+def get_db_tournament() -> TinyDB:
+    return TinyDB(PATH_TOURNAMENTS)
 
 
+class Repository:
+    def add_db(self, data):
+        self.db.insert(dict(data))
+
+
+class TournamentRepository(Repository):
+    def __init__(self, db):
+        self.db = db
+
+    def tournament_exist(self, name: str) -> bool:
+        """ Renvoie True si nom est présent dans la base de donnée """
+        TournamentQuery = Query()
+        return bool(self.db.search(TournamentQuery.name == name))
+
+
+class PlayerRepository(Repository):
+    def __init__(self, db):
+        self.db = db
+
+    def player_search(self, id_chess):
+        """ Recherche un joueur grâce à son id_chess"""
+        JoueurQuery = Query()
+        return self.db.get(JoueurQuery.id_chess == id_chess)
+
+    def player_exist(self, id_chess: str) -> bool:
+        """ Renvoie True si id_echec est présent dans la base de donnée """
+        JoueurQuery = Query()
+        return bool(self.db.search(JoueurQuery.id_chess == id_chess))
+
+    def update_player(self, id_chess: str, valeur: dict):
+        JoueurQuery = Query()
+        self.db.update(valeur, JoueurQuery.id_echec == id_chess)
+
+    def get_list_players(self):
+        return self.db.all()
 if __name__ == "__main__":
-    for path in [PATH_JOUEURS, PATH_TOURNOIS]:
-        initialisation_db()
-        format_db(path)
+
+    initialization_db()
