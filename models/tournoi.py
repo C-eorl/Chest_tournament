@@ -2,51 +2,51 @@ from datetime import datetime
 
 from tinydb import Query
 
-from models.joueur import Joueur
+from models.player import Player
 from utils import database
 
 
 class Tournoi:
-    def __init__(self, nom: str, lieu: str, description: str, nombre_tours: int =4):
-        self.nom = nom
-        self.lieu = lieu
-        self.date_debut = datetime.now().strftime("%d/%m/%Y")
-        self.date_fin = None
-        self.nombre_tours = nombre_tours
+    def __init__(self, name: str, locality: str, description: str, round_number: int =4):
+        self.name = name
+        self.locality = locality
+        self.start_date = datetime.now().strftime("%d/%m/%Y")
+        self.end_date = None
+        self.round_number = round_number
         self.description = description
-        self.liste_participant = []
+        self.list_participant = []
 
     def __str__(self):
-        return (f"Tournoi {self.nom} à {self.lieu} (Début: {self.date_debut} - Fin: {self.date_fin})")
+        return f"Tournoi {self.name} à {self.locality} (Début: {self.start_date} - Fin: {self.end_date})"
 
     def __iter__(self):
         for key, value in self.__dict__.items():
             yield key, value
 
-    def ajout_participant(self, joueur: Joueur):
+    def ajout_participant(self, joueur: Player):
         """ Ajoute un Joueur au tournoi """
-        self.liste_participant.append(joueur)
+        self.list_participant.append(joueur)
 
     def save_tournoi(self):
         """ Sauvegarde le tournoi dans le fichier tournois.json """
-        db = database.get_db_tournoi()
+        db = database.get_db_tournament()
         TournoiQuery = Query()
-        if not db.search(TournoiQuery.nom == self.nom):
+        if not db.search(TournoiQuery.nom == self.name):
             db.insert(dict(self))
             print(str(self) + " ajouter à la base de donnée tournois.json")
         else:
             print(str(self) + " existe déjà")
 
-    def tournoi_fini(self):
+    def finished_tournament(self):
         """
         Défini date et heure de la fin du tournoi et enregistre la modification dans la base de donnée
         :return: None
         """
-        if self.date_fin is None:
-            db = database.get_db_tournoi()
-            self.date_fin = datetime.now().strftime("%d/%m/%Y")
+        if self.end_date is None:
+            db = database.get_db_tournament()
+            self.end_date = datetime.now().strftime("%d/%m/%Y")
             TournoiQuery = Query()
-            db.update({"date_fin": self.date_fin}, TournoiQuery.nom == self.nom)
+            db.update({"date_fin": self.end_date}, TournoiQuery.nom == self.name)
             print(f"{str(self)} vient de se finir.")
         else:
             print(f"{str(self)} est déjà terminée.")
@@ -55,5 +55,3 @@ class Tournoi:
 
 if __name__ == "__main__":
     t = Tournoi("t","Bourges","lorem ipsum")
-    t.tournoi_fini()
-    t.tournoi_fini()
