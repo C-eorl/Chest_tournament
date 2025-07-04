@@ -28,7 +28,7 @@ class ControllerInterface:
                  "Choisissez une option:")
         option = {
             "Ajouter un joueur": self.controller_player.registration_player,
-            "Modifier un joueur": self.controller_player.modify_menu,
+            "Modifier un joueur": self.controller_player.alt_modify_player,
             "Liste des joueurs": self.controller_player.list_players,
             "Retour": self.main_menu
         }

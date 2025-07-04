@@ -82,7 +82,7 @@ class PlayerRepository(Repository):
 
     def update_player(self, id_chess: str, valeur: dict):
         JoueurQuery = Query()
-        self.db.update(valeur, JoueurQuery.id_echec == id_chess)
+        self.db.update(valeur, JoueurQuery.id_chess == id_chess)
 
     def get_list_players(self):
         return self.db.all()

@@ -1,4 +1,5 @@
 from datetime import datetime
+from random import choices
 
 import questionary
 
@@ -51,7 +52,8 @@ class ControllerPlayer:
         :return: dict de tous les joueurs
         """
         list_players = self.repo.get_list_players()
-        self.view.display_list_players(list_players)
+        sorted_list_player = sorted(list_players, key=lambda x: x["name"])
+        self.view.display_list_players(sorted_list_player)
 
     def modify_menu(self):
         """
@@ -69,5 +71,29 @@ class ControllerPlayer:
         else:
             self.view.display_message("Aucune modification effectuée.")
 
+    def alt_modify_player(self):
+        self.view.display_message("Quel joueur voulez-vous modifier (par ID nationnal d'échec): ")
+        players = self.repo.get_list_players()
+        choices = [
+            questionary.Choice(
+                title=f"{player['firstname']} {player['name']} (ID: {player['id_chess']})",
+                value=player
+            )
+            for player in players
+        ]
+
+        player_selectionne = questionary.select(
+            "Sélectionnez un joueur (filtrable) :",
+            choices=choices,
+            use_search_filter=True,
+            use_jk_keys=False
+        ).ask()
+        modifications = self.view.display_modify_player(player_selectionne)
+        print(modifications)
+        if modifications:
+            self.repo.update_player(player_selectionne["id_chess"], modifications)
+            self.view.display_message("Joueur modifié avec succès.")
+        else:
+            self.view.display_message("Aucune modification effectuée.")
 if __name__ == "__main__":
     pass
