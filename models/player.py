@@ -1,6 +1,5 @@
 from datetime import date, datetime
-from tinydb import Query
-from utils import database
+from utils.database import PlayerRepository, get_db_player
 
 
 class Joueur:
@@ -34,23 +33,22 @@ class Joueur:
         if isinstance(other, Joueur):
             return self.score == other.score
 
-    def save_joueur(self):
+    def save(self, repo: PlayerRepository):
         """
-        Accède à la base de donnée joueurs.json.
-        Recherche si id du joueur existe, si False rajoute le Joueur à la base de donnée
-        :return: None
+        sauvegarde le joueur dans la base de donnée
+        :param repo: class manageur de joueur
+        :return: True si le joueur n'existe pas et le rajoute à la base de donnée, False s'il existe
         """
-        db = database.get_db_joueurs()
-        JoueurQuery = Query()
-        if not db.search(JoueurQuery.id_echec == self.id_echec):
-            db.insert(dict(self))
-            print(str(self) + " ajouter à la base de donnée joueurs.json")
-        else:
-            print(str(self) + " existe déjà")
+        if not repo.player_exist(self.id_echec):
+            repo.add_db(self)
+            return True
+        return False
 
 
 if __name__ == "__main__":
     bd = datetime.strptime("01/11/1945", "%d/%m/%Y")
     p = Joueur("test","test",bd, "QZ11122")
-    print(str(p))
+    db = get_db_player()
+    repo_player = PlayerRepository(db)
+    p.save(repo_player)
 
