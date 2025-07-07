@@ -1,10 +1,10 @@
-from views.view_chess import View
+from views.view_player import ViewPlayer
 from controllers.controller_player import ControllerPlayer
 
 class ControllerInterface:
     def __init__(self):
         self.controller_player = ControllerPlayer()
-        self.view = View()
+        self.view = ViewPlayer()
 
     def main_menu(self):
         """Menu principal"""
