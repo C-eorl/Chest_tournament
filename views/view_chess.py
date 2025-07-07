@@ -22,52 +22,66 @@ class View:
 
 
     def display_message(self, message):
+        """ Affiche du texte
+        :param message: str
+        """
         print(message)
 
-    def validate_firstname(text):
-        if not text or any(char.isdigit() for char in text):
-            return "Le prénom ne doit pas contenir de chiffres et ne peut pas être vide"
-        return True
-    firstname = questionary.text("Prénom :", validate=validate_firstname).ask()
-    if firstname:
-        firstname = firstname.capitalize()
-
-    def validate_name(text):
-        if not text or any(char.isdigit() for char in text):
-            return "Le nom ne doit pas contenir de chiffres et ne peut pas être vide"
-        return True
-    name = questionary.text("Nom :", validate=validate_name).ask()
-    if name:
-        name = name.capitalize()
-
-    def validate_date(text):
-        pattern_date = r"^([0-2][0-9]|3[01])/([0][1-9]|1[0-2])/(\d{4})$"
-        if not re.match(pattern_date, text):
-            return "Format invalide (dd/mm/aaaa)"
-        return True
-    birthday = questionary.text("Date de naissance (dd/mm/aaaa) :", validate=validate_date).ask()
-
-    def validate_id(text):
-        pattern_id = r'^[A-Z]{2}\d{5}$'
-        if not re.match(pattern_id, text):
-            return "Format invalide (ex: AA12345)"
-        return True
-
     def input_player(self):
-        firstname = questionary.text("Prénom :", validate=self.validate_firstname).ask()
+        def validate_firstname(text):
+            """
+            valide le prénom et empêche une mauvaise entrée.
+            :return: True
+            """
+            if not text or any(char.isdigit() for char in text):
+                return "Le prénom ne doit pas contenir de chiffres et ne peut pas être vide"
+            return True
+
+        firstname = questionary.text("Prénom :", validate=validate_firstname).ask()
         if firstname:
             firstname = firstname.capitalize()
 
-        name = questionary.text("Nom :", validate=self.validate_name).ask()
+        def validate_name(text):
+            """
+            valide le prénom et empêche une mauvaise entrée.
+            :return: True
+            """
+            if not text or any(char.isdigit() for char in text):
+                return "Le nom ne doit pas contenir de chiffres et ne peut pas être vide"
+            return True
+
+        name = questionary.text("Nom :", validate=validate_name).ask()
         if name:
             name = name.capitalize()
 
-        birthday = questionary.text("Date de naissance (dd/mm/aaaa) :", validate=self.validate_date).ask()
-        id_chess = questionary.text("ID national d'échec (ex: AA12345) :", validate=self.validate_id).ask()
+        def validate_date(text):
+            """
+            valide le prénom et empêche une mauvaise entrée.
+            :return: True
+            """
+            pattern_date = r"^([0-2][0-9]|3[01])/([0][1-9]|1[0-2])/(\d{4})$"
+            if not re.match(pattern_date, text):
+                return "Format invalide (dd/mm/aaaa)"
+            return True
+
+        birthday = questionary.text("Date de naissance (dd/mm/aaaa) :", validate=validate_date).ask()
+
+        def validate_id(text):
+            """
+            valide le prénom et empêche une mauvaise entrée.
+            :return: True
+            """
+            pattern_id = r'^[A-Z]{2}\d{5}$'
+            if not re.match(pattern_id, text):
+                return "Format invalide (ex: AA12345)"
+            return True
+
+        id_chess = questionary.text("ID national d'échec (ex: AA12345) :", validate=validate_id).ask()
 
         return [name, firstname, birthday, id_chess]
 
     def display_list_players(self, list_players):
+        """Affiche un tableau rich avec la liste des joueurs"""
         table = Table(title="Liste des joueurs")
         table.add_column("IDN d'échec")
         table.add_column("Nom")
@@ -79,7 +93,11 @@ class View:
         console.print(table)
 
     def display_modify_player(self, player):
-
+        """
+        menu pour modifier le joueur
+        :param player: dictionnaire du joueur selectionné
+        :return: dict des modifications à changer
+        """
         if not player:
             self.display_message(f"Aucun joueur avec cet ID")
             return None
