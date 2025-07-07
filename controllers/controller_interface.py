@@ -1,7 +1,3 @@
-from time import sleep
-
-import questionary
-
 from views.view_chess import View
 from controllers.controller_player import ControllerPlayer
 
@@ -11,6 +7,7 @@ class ControllerInterface:
         self.view = View()
 
     def main_menu(self):
+        """Menu principal"""
         title = ("Chess Tournament manager\n"
                 "Choisissez une option:")
         # condition "continuez tournoi" affiché si tournoi en cours
@@ -24,17 +21,19 @@ class ControllerInterface:
         self.view.menu(title, option)
 
     def player_menu(self):
+        """Menu joueur"""
         title = ("Gestion des joueurs\n"
                  "Choisissez une option:")
         option = {
             "Ajouter un joueur": self.controller_player.registration_player,
-            "Modifier un joueur": self.controller_player.alt_modify_player,
+            "Modifier un joueur": self.controller_player.modify_player,
             "Liste des joueurs": self.controller_player.list_players,
             "Retour": self.main_menu
         }
         self.view.menu(title, option)
 
     def tournament_menu(self):
+        """Menu tournoi"""
         title = ("Gestion des tournois\n"
                  "Choisissez une option:")
         option = {
@@ -49,7 +48,8 @@ class ControllerInterface:
         self.view.menu(title, option)
 
     def current_tournament_menu(self):
-        # liste des tournois en cours + choix
+        """Menu tournoi en cours"""
+        # TODO: liste des tournois en cours + choix
         title = ("Gestion du tournoi en cours\n"
                  "Choisissez une option:")
         option = {
@@ -62,6 +62,7 @@ class ControllerInterface:
         self.view.menu(title, option)
 
     def rapport_menu(self):
+        """Menu rapport"""
         title = ("Gestion des rapports\n"
                  "Choisissez une option:")
         option = {
@@ -78,5 +79,5 @@ class ControllerInterface:
 if __name__ == "__main__":
     c = ControllerPlayer()
     print(c.db.all())
-    player = c.repo.player_search("HJ45612")
+    player = c.repo_player.player_search("HJ45612")
     print(player)
