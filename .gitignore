@@ -14,7 +14,7 @@ __pycache__/
 tests/
 
 # Ignore base de données (TinyDB)
-data/joueurs/*.json
+data/players/*.json
 data/tournaments/*.json
 
 # ignore fichier configuration
