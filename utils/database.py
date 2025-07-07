@@ -27,7 +27,6 @@ def initialization_db():
         else:
             print(f"La base de donnée {name_file} existe déjà")
 
-
 def format_db(path: str):
     """
     formate la tinyDB pour une version plus lisible
