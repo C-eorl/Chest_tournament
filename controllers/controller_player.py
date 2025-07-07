@@ -1,14 +1,14 @@
 from datetime import datetime
 import questionary
 from models.player import Player
-from views.view_chess import View
+from views.view_player import ViewPlayer
 from utils.database import get_db_player
 from models.player_DAO import PlayerRepository
 
 
 class ControllerPlayer:
     def __init__(self):
-        self.view = View()
+        self.view = ViewPlayer()
         self.db = get_db_player()
         self.repo_player = PlayerRepository(self.db)
 
@@ -59,11 +59,11 @@ class ControllerPlayer:
         Demande la modification puis mets à jour le joueur dans la base de donnée
         :return: None
         """
-        self.view.display_message("Quel joueur voulez-vous modifier (par ID nationnal d'échec): ")
+        self.view.display_message("Quel joueur voulez-vous modifier : ")
         players = self.repo_player.get_list_players()
         choices = [
             questionary.Choice(
-                title=f"{player['firstname']} {player['name']} (ID: {player['id_chess']})",
+                title=f"{player}",
                 value=player
             )
             for player in players
