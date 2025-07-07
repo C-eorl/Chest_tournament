@@ -51,41 +51,7 @@ def get_db_tournament() -> TinyDB:
     return TinyDB(PATH_TOURNAMENTS)
 
 
-class Repository:
-    def add_db(self, data):
-        self.db.insert(dict(data))
 
-
-class TournamentRepository(Repository):
-    def __init__(self, db):
-        self.db = db
-
-    def tournament_exist(self, name: str) -> bool:
-        """ Renvoie True si nom est présent dans la base de donnée """
-        TournamentQuery = Query()
-        return bool(self.db.search(TournamentQuery.name == name))
-
-
-class PlayerRepository(Repository):
-    def __init__(self, db):
-        self.db = db
-
-    def player_search(self, id_chess):
-        """ Recherche un joueur grâce à son id_chess"""
-        JoueurQuery = Query()
-        return self.db.get(JoueurQuery.id_chess == id_chess)
-
-    def player_exist(self, id_chess: str) -> bool:
-        """ Renvoie True si id_echec est présent dans la base de donnée """
-        JoueurQuery = Query()
-        return bool(self.db.search(JoueurQuery.id_chess == id_chess))
-
-    def update_player(self, id_chess: str, valeur: dict):
-        JoueurQuery = Query()
-        self.db.update(valeur, JoueurQuery.id_chess == id_chess)
-
-    def get_list_players(self):
-        return self.db.all()
 if __name__ == "__main__":
 
     initialization_db()
