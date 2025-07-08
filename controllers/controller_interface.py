@@ -6,13 +6,14 @@ class ControllerInterface:
         self.controller_player = ControllerPlayer()
         self.view = ViewPlayer()
 
-    def main_menu(self):
+    def run(self):
         """Menu principal"""
+
         title = ("Chess Tournament manager\n"
                 "Choisissez une option:")
         # condition "continuez tournoi" affiché si tournoi en cours
         option = {
-            "Joueurs": self.player_menu,
+            "Joueurs": self.controller_player.run,
             "Tournois": self.tournament_menu,
             "Continuez un tournoi existant": self.current_tournament_menu,
             "Rapports": self.rapport_menu,
@@ -20,17 +21,7 @@ class ControllerInterface:
         }
         self.view.menu(title, option)
 
-    def player_menu(self):
-        """Menu joueur"""
-        title = ("Gestion des joueurs\n"
-                 "Choisissez une option:")
-        option = {
-            "Ajouter un joueur": self.controller_player.registration_player,
-            "Modifier un joueur": self.controller_player.modify_player,
-            "Liste des joueurs": self.controller_player.list_players,
-            "Retour": self.main_menu
-        }
-        self.view.menu(title, option)
+
 
     def tournament_menu(self):
         """Menu tournoi"""
@@ -43,7 +34,7 @@ class ControllerInterface:
             "Liste des tournois": NotImplemented,
             "Details d'un tournoi": NotImplemented,
             "Continuez un tournoi existant": self.current_tournament_menu,
-            "Retour": self.main_menu
+            "Retour": self.run
         }
         self.view.menu(title, option)
 
@@ -57,7 +48,7 @@ class ControllerInterface:
             "Saisie des résultats": NotImplemented,
             "Round suivant": NotImplemented,
             "Mettre fin au tournoi": NotImplemented,
-            "Retour": self.main_menu
+            "Retour": self.run
         }
         self.view.menu(title, option)
 
@@ -69,7 +60,7 @@ class ControllerInterface:
             "Liste de tous les joueurs": NotImplemented,
             "Liste de tous les tournois": NotImplemented,
             "Liste des joueurs du tournoi par ordre alphabétique": NotImplemented,
-            "Retour": self.main_menu
+            "Retour": self.run
         }
         self.view.menu(title, option)
 
