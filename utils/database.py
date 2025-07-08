@@ -50,7 +50,6 @@ def get_db_tournament() -> TinyDB:
     return TinyDB(PATH_TOURNAMENTS)
 
 
-
 if __name__ == "__main__":
 
     initialization_db()

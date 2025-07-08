@@ -1,11 +1,15 @@
-import re
 import questionary
 from rich.console import Console
 from rich.table import Table
+
+from models.player import Player
+from utils.validation import validate_field
 from views.view import View
+
+
 class ViewPlayer(View):
 
-    def display_list_players(self, list_players):
+    def display_list_players(self, list_players: list[Player]):
         """Affiche un tableau rich avec la liste des joueurs"""
         # essayer methode générique
         table = Table(title="Liste des joueurs")
@@ -14,7 +18,8 @@ class ViewPlayer(View):
         table.add_column("Prénom")
         table.add_column("Date de naissance")
         for player in list_players:
-            table.add_row(player["id_chess"], player["name"], player["firstname"], player["birthdate"], )
+            p_dict = player.to_dict()
+            table.add_row(p_dict["id_chess"], p_dict["name"], p_dict["firstname"], p_dict["birthdate"], )
         console = Console()
         console.print(table)
 
@@ -43,61 +48,32 @@ class ViewPlayer(View):
         modifications = {}
         for champ in champs_a_modifier:
             cle_technique = mapping[champ]  # récupère la clé technique correspondante
-            valeur_actuelle = player.get(cle_technique, "")
-            nouvelle_valeur = questionary.text(f"Nouvelle valeur pour {champ} (actuel: {valeur_actuelle}) :").ask()
-            modifications[cle_technique] = nouvelle_valeur
+            valeur_actuelle = getattr(player, cle_technique, "")
+            while True:
+                nouvelle_valeur = questionary.text(
+                    f"Nouvelle valeur pour {champ} (actuel: {valeur_actuelle}) : (laisser vide pour annuler)"
+                ).ask()
 
-        return modifications
+                if not nouvelle_valeur:  # annulation modification pour ce champ
+                    break
+
+                if validate_field(cle_technique, nouvelle_valeur):
+                    modifications[cle_technique] = nouvelle_valeur
+                    break
+                else:
+                    print(f"Valeur invalide pour {champ}. Veuillez réessayer.")
+
+            return modifications
 
     def input_player(self):
-        def validate_firstname(text):
-            """
-            valide le prénom et empêche une mauvaise entrée.
-            :return: True
-            """
-            if not text or any(char.isdigit() for char in text):
-                return "Le prénom ne doit pas contenir de chiffres et ne peut pas être vide"
-            return True
 
-        firstname = questionary.text("Prénom :", validate=validate_firstname).ask()
+        firstname = questionary.text("Prénom :", validate=lambda text: validate_field("firstname", text)).ask()
         if firstname:
             firstname = firstname.capitalize()
-
-        def validate_name(text):
-            """
-            valide le prénom et empêche une mauvaise entrée.
-            :return: True
-            """
-            if not text or any(char.isdigit() for char in text):
-                return "Le nom ne doit pas contenir de chiffres et ne peut pas être vide"
-            return True
-
-        name = questionary.text("Nom :", validate=validate_name).ask()
+        name = questionary.text("Nom :", validate=lambda text: validate_field("name", text)).ask()
         if name:
             name = name.capitalize()
-
-        def validate_date(text):
-            """
-            valide le prénom et empêche une mauvaise entrée.
-            :return: True
-            """
-            pattern_date = r"^([0-2][0-9]|3[01])/([0][1-9]|1[0-2])/(\d{4})$"
-            if not re.match(pattern_date, text):
-                return "Format invalide (dd/mm/aaaa)"
-            return True
-
-        birthdate = questionary.text("Date de naissance (dd/mm/aaaa) :", validate=validate_date).ask()
-
-        def validate_id(text):
-            """
-            valide le prénom et empêche une mauvaise entrée.
-            :return: True
-            """
-            pattern_id = r'^[A-Z]{2}\d{5}$'
-            if not re.match(pattern_id, text):
-                return "Format invalide (ex: AA12345)"
-            return True
-
-        id_chess = questionary.text("ID national d'échec (ex: AA12345) :", validate=validate_id).ask()
+        birthdate = questionary.text("Date de naissance (dd/mm/aaaa) :", validate=lambda text: validate_field("birthdate", text)).ask()
+        id_chess = questionary.text("ID national d'échec (ex: AA12345) :", validate=lambda text: validate_field("id_chess", text)).ask()
 
         return [name, firstname, birthdate, id_chess]
