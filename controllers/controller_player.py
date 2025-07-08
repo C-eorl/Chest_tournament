@@ -1,5 +1,6 @@
 from datetime import datetime
 import questionary
+
 from models.player import Player
 from views.view_player import ViewPlayer
 from utils.database import get_db_player
@@ -11,6 +12,25 @@ class ControllerPlayer:
         self.view = ViewPlayer()
         self.db = get_db_player()
         self.repo_player = PlayerRepository(self.db)
+
+
+    def run(self):
+        """Menu joueur"""
+        title = ("Gestion des joueurs\n"
+                 "Choisissez une option:")
+        option = {
+            "Ajouter un joueur": self.registration_player,
+            "Modifier un joueur": self.modify_player,
+            "Liste des joueurs": self.list_players,
+            "Retour": self.retour
+        }
+        self.view.menu(title, option)
+
+
+    def retour(self):
+        from controllers.controller_interface import ControllerInterface
+        controller = ControllerInterface()
+        return controller.run()
 
     def get_player(self) -> Player:
         """
