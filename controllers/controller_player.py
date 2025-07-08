@@ -50,7 +50,7 @@ class ControllerPlayer:
         :return: dict de tous les joueurs
         """
         list_players = self.repo_player.get_list_players()
-        sorted_list_player = sorted(list_players, key=lambda x: x["name"])
+        sorted_list_player = sorted(list_players, key=lambda x: x.name)
         self.view.display_list_players(sorted_list_player)
 
     def modify_player(self):
@@ -78,7 +78,7 @@ class ControllerPlayer:
         modifications = self.view.display_modify_player(player_selectionne)
         print(modifications)
         if modifications:
-            self.repo_player.update(player_selectionne["id_chess"], modifications)
+            self.repo_player.update(player_selectionne.id_chess, modifications)
             self.view.display_message("Joueur modifié avec succès.")
         else:
             self.view.display_message("Aucune modification effectuée.")
