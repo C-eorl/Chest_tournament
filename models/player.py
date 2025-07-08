@@ -39,7 +39,7 @@ class Player:
         return cls(
             name = data["name"],
             firstname = data["firstname"],
-            birthdate=datetime.strptime(data["birthdate"], "%Y/%m/%d").date(),
+            birthdate=datetime.strptime(data["birthdate"], "%d/%m/%Y").date(),
             id_chess = data["id_chess"],
         )
 
