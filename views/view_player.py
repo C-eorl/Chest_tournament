@@ -9,21 +9,6 @@ from views.view import View
 
 class ViewPlayer(View):
 
-    def display_list_players(self, list_players: list[Player]):
-        """Affiche un tableau rich avec la liste des joueurs"""
-        # essayer methode générique
-        table = Table(title="Liste des joueurs")
-        table.add_column("IDN d'échec")
-        table.add_column("Nom")
-        table.add_column("Prénom")
-        table.add_column("Date de naissance")
-        for player in list_players:
-            p_dict = player.to_dict()
-            table.add_row(p_dict["id_chess"], p_dict["name"], p_dict["firstname"], p_dict["birthdate"], )
-        console = Console()
-        console.print(table)
-
-
     def display_modify_player(self, player):
         """
         menu pour modifier le joueur
