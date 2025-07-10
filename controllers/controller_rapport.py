@@ -1,5 +1,6 @@
 from views.view import View
 from controllers.controller_player import ControllerPlayer
+from utils.exit_menu import retour
 
 
 class ControllerRapport:
@@ -16,11 +17,6 @@ class ControllerRapport:
             "Liste de tous les tournois": NotImplemented,
             "Liste des joueurs du tournoi par ordre alphabétique": NotImplemented,
             "Exporter les rapports": NotImplemented,
-            "Retour": self.retour
+            "Retour": retour
         }
         self.view.menu(title, option)
-
-    def retour(self):
-        from controllers.controller_interface import ControllerInterface
-        controller = ControllerInterface()
-        return controller.run()
