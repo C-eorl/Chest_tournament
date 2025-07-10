@@ -1,5 +1,8 @@
 import questionary
 
+from rich.table import Table
+from rich.console import Console
+
 
 class View:
     def menu(self, titre, options):
@@ -19,10 +22,33 @@ class View:
 
 
     def display_message(self, message):
-        """ Affiche du texte
+        """ Affiche un message
         :param message: str
         """
         print(message)
 
-    def display_error(self):
-        print("Error")
+    def display_error(self, error):
+        """
+        Affiche l'erreur
+        :param error: str
+        """
+        print(f"Error: {error}")
+
+    def display_list_data(self, list_data: list, title_table: str, fields: list):
+        """
+        Affiche un tableau avec les données passée (Player, Tournament)
+        :param list_data: list d'objet
+        :param title_table: titre du tableau
+        :param fields: champs des colonnes à afficher
+        :return:
+        """
+        table = Table(title=title_table)
+        for field in fields:
+            table.add_column(field.capitalize())
+        for data in list_data:
+            data_dict = data.to_dict()
+            row = [str(data_dict.get(field, "")) for field in fields]
+            table.add_row(*row)
+
+        console = Console()
+        console.print(table)
