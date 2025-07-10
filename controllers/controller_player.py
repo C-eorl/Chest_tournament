@@ -1,6 +1,6 @@
 from datetime import datetime
 import questionary
-
+from utils.exit_menu import retour
 from models.player import Player
 from views.view_player import ViewPlayer
 from utils.database import get_db_player
@@ -22,15 +22,9 @@ class ControllerPlayer:
             "Ajouter un joueur": self.registration_player,
             "Modifier un joueur": self.modify_player,
             "Liste des joueurs": self.list_players,
-            "Retour": self.retour
+            "Retour": retour
         }
         self.view.menu(title, option)
-
-
-    def retour(self):
-        from controllers.controller_interface import ControllerInterface
-        controller = ControllerInterface()
-        return controller.run()
 
     def get_player(self) -> Player:
         """
@@ -60,7 +54,7 @@ class ControllerPlayer:
         """
         joueur = self.get_player()
         if self.save(joueur):
-            self.view.display_message(f"{str(joueur)} a été ajouté la base de donnée")
+            self.view.display_message(f"{str(joueur)} a été ajouté à la base de donnée")
         else:
             self.view.display_message(f"{str(joueur)} existe déjà dans la base de donnée")
 
@@ -71,7 +65,7 @@ class ControllerPlayer:
         """
         list_players = self.repo_player.get_list_players()
         sorted_list_player = sorted(list_players, key=lambda x: x.name)
-        self.view.display_list_players(sorted_list_player)
+        self.view.display_list_data(sorted_list_player, "Liste des joueurs", ["id_chess","name", "firstname", "birthdate"])
 
     def modify_player(self):
         """
