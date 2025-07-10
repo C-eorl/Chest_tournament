@@ -25,11 +25,11 @@ class ControllerInterface:
             "Rapports": self.controller_rapport.run,
             "Quittez": exit
         }
+        exist_current = self.controller_current_tournament.list_current_tournament()
+        if not exist_current:
+            option.pop("Continuez un tournoi existant")
         self.view.menu(title, option)
 
 
 if __name__ == "__main__":
-    c = ControllerPlayer()
-    print(c.db.all())
-    player = c.repo_player.player_search("HJ45612")
-    print(player)
+    pass
