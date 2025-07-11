@@ -1,6 +1,7 @@
 from models.tournament import Tournament
 from models.tournament_DAO import TournamentRepository
 from utils.database import get_db_tournament
+from utils.decorateur_try import decorator_try
 from utils.exit_menu import retour
 from views.view_tournament import ViewTournament
 
@@ -11,6 +12,7 @@ class ControllerCurrentTournament:
         self.repo_tournament = TournamentRepository(self.db)
         self.target = None
 
+    @decorator_try
     def run(self):
         """Menu tournoi en cours"""
         if self.target is None:
@@ -42,7 +44,7 @@ class ControllerCurrentTournament:
     def get_tournament_target(self):
         """renvoie le tournoi en cours ciblé pour l'utiliser"""
         current_tournaments = self.list_current_tournament()
-        return self.view.display_tournament(current_tournaments)
+        return self.view.display_selected_tournament(current_tournaments)
 
 
 
