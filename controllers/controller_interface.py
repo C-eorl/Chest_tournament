@@ -3,6 +3,7 @@ from controllers.controller_player import ControllerPlayer
 from controllers.controller_tournament import ControllerTournament
 from controllers.controller_current_tournament import ControllerCurrentTournament
 from controllers.controller_rapport import ControllerRapport
+from utils.decorateur_try import decorator_try
 
 class ControllerInterface:
     def __init__(self):
@@ -12,6 +13,7 @@ class ControllerInterface:
         self.controller_rapport = ControllerRapport()
         self.view = ViewPlayer()
 
+    @decorator_try
     def run(self):
         """Menu principal"""
 
