@@ -1,4 +1,4 @@
-from tinydb import Query, where
+from tinydb import Query, where, TinyDB
 from models.tournament import Tournament
 
 
@@ -19,7 +19,6 @@ class TournamentRepository:
         """Recherche un tournoi grâce à son name"""
         return self.db.search(where("statut") == statut)
 
-
     def update(self, name: str, valeur: dict):
         """
         Mets à jour les informations d'un tournoi
@@ -33,3 +32,6 @@ class TournamentRepository:
         """Renvoie la liste de tous les tournois"""
         tournaments_data = self.db.all()
         return [Tournament.from_dict(tournament) for tournament in tournaments_data]
+
+    def delete_tournament (self, tournament):
+        self.db.remove(where("tournament_name") == tournament.tournament_name)
