@@ -29,7 +29,7 @@ class Tournament:
             "end_date": self.end_date.strftime("%d/%m/%Y"),
             "round_number": self.round_number,
             "description": self.description,
-            "list_participant": self.list_participant,
+            "list_participant": [participant.to_dict() for participant in self.list_participant],
             "statut": self.statut
         }
 
@@ -43,8 +43,8 @@ class Tournament:
             end_date=datetime.strptime(data["end_date"], "%d/%m/%Y").date(),
             round_number = data.get("round_number", 4)
         )
-
-        tournament.list_participant = data.get("list_participant", [])
+        list_participant = data.get("list_participant", [])
+        [Player.from_dict(player) for player in list_participant]
         tournament.statut = data.get("statut", False)
         return tournament
 
