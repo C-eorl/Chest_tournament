@@ -1,5 +1,7 @@
 from datetime import datetime
 import questionary
+
+from utils.decorateur_try import decorator_try
 from utils.exit_menu import retour
 from models.player import Player
 from views.view_player import ViewPlayer
@@ -13,7 +15,7 @@ class ControllerPlayer:
         self.db = get_db_player()
         self.repo_player = PlayerRepository(self.db)
 
-
+    @decorator_try
     def run(self):
         """Menu joueur"""
         title = ("Gestion des joueurs\n"
@@ -75,24 +77,14 @@ class ControllerPlayer:
         """
         self.view.display_message("Quel joueur voulez-vous modifier : ")
         players = self.repo_player.get_list_players()
-        choices = [
-            questionary.Choice(
-                title=f"{player}",
-                value=player
-            )
-            for player in players
-        ]
+        player_selected = self.view.display_selected_data(players)
 
-        player_selectionne = questionary.select(
-            "Sélectionnez un joueur (filtrable) :",
-            choices=choices,
-            use_search_filter=True,
-            use_jk_keys=False
-        ).ask()
-        modifications = self.view.display_modify_player(player_selectionne)
-        print(modifications)
+        fields = ["Nom", "prénom", "date de naissance", "id_echec"]
+        technic_fields = ["name", "firstname", "birthdate", "id_chess"]
+        modifications = self.view.display_modify_data(player_selected, fields, technic_fields)
+
         if modifications:
-            self.repo_player.update(player_selectionne.id_chess, modifications)
+            self.repo_player.update(player_selected.id_chess, modifications)
             self.view.display_message("Joueur modifié avec succès.")
         else:
             self.view.display_message("Aucune modification effectuée.")
