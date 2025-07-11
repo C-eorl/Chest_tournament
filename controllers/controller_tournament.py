@@ -1,17 +1,22 @@
+from utils.decorateur_try import decorator_try
 from utils.exit_menu import retour
-from utils.database import get_db_tournament
+from utils.database import get_db_tournament, get_db_player
 from views.view_tournament import ViewTournament
 from controllers.controller_current_tournament import ControllerCurrentTournament
 from models.tournament import Tournament
 from models.tournament_DAO import TournamentRepository
+from models.player_DAO import PlayerRepository
 
 class ControllerTournament:
     def __init__(self):
+        self.db_player = get_db_player()
+        self.repo_player = PlayerRepository(self.db_player)
         self.db = get_db_tournament()
         self.repo_tournament = TournamentRepository(self.db)
         self.controller_current_tournament = ControllerCurrentTournament()
         self.view = ViewTournament()
 
+    @decorator_try
     def run (self):
         """Menu tournoi"""
         title = ("Gestion des tournois\n"
@@ -19,10 +24,11 @@ class ControllerTournament:
         option = {
             "Créer un nouveau tournoi": self.registration,
             "Démarrer un tournoi": self.start_tournament,
-            "Modifier un tournoi": NotImplemented,
-            "Supprimer un tournoi": NotImplemented,
+            "Rajouter un participant": self.add_participant,
+            "Modifier un tournoi": self.modify_tournament,
+            "Supprimer un tournoi": self.delete_tournament,
             "Liste des tournois": self.list_tournaments,
-            "Details d'un tournoi": NotImplemented,
+            "Details d'un tournoi": self.detail_tournament,
             "Continuez un tournoi existant": self.controller_current_tournament.run,
             "Retour": retour
         }
@@ -80,10 +86,57 @@ class ControllerTournament:
         """
         list_ready_tournament = self.get_list_ready_tournament()
         if list_ready_tournament:
-            tournament = self.view.display_tournament(list_ready_tournament)
+            tournament = self.view.display_selected_tournament(list_ready_tournament)
             tournament.statut = "current"
             self.repo_tournament.update(tournament.tournament_name, tournament.to_dict())
             self.controller_current_tournament.target = tournament
             self.controller_current_tournament.run()
         else:
             self.view.display_message("pas de tournoi à commencer")
+
+    def modify_tournament(self):
+        """
+        Récupère la liste de tous les tournois affiche la liste avec option selection puis demande quels champs
+        modifier.
+        Récupère la modification et met à jour la base de donnée
+        :return: None
+        """
+        self.view.display_message("Quel tournoi voulez-vous modifier ?")
+        tournaments = self.repo_tournament.get_list_tournaments()
+        tournament_selected = self.view.display_selected_data(tournaments)
+        fields = ["Nom", "Ville", "Date de début", "Date de fin", "Nombre de round", "Description", "Statut"]
+        technic_fields = ["tournament_name", "locality", "start_date", "end_date", "round_number", "description", "Statut"]
+        modifications = self.view.display_modify_data(tournament_selected, fields, technic_fields)
+
+        if modifications:
+            self.repo_tournament.update(tournament_selected.tournament_name, modifications)
+            self.view.display_message("Joueur modifié avec succès.")
+        else:
+            self.view.display_message("Aucune modification effectuée.")
+
+    def delete_tournament(self):
+        """Supprime un tournoi de la base de donnée"""
+        list_tournaments = self.repo_tournament.get_list_tournaments()
+        tournament_selected = self.view.display_selected_tournament(list_tournaments)
+        self.repo_tournament.delete_tournament(tournament_selected)
+        self.view.display_message(f"{tournament_selected} a été supprimé de la base de donnée")
+
+    def detail_tournament(self):
+        """Affiche les détails d'un tournoi """
+        list_tournaments = self.repo_tournament.get_list_tournaments()
+        tournament_selected = self.view.display_selected_tournament(list_tournaments)
+        self.view.display_tournament(tournament_selected)
+
+    def add_participant(self):
+        """Rajoute un joueur dans la liste des participants d'un tournoi """
+        list_tournaments = self.repo_tournament.get_list_tournaments()
+        tournament_selected = self.view.display_selected_tournament(list_tournaments)
+        players = self.repo_player.get_list_players()
+        player_selected = self.view.display_selected_data(players)
+        if player_selected in tournament_selected.list_participant:
+            self.view.display_message(
+                f"{player_selected} est déjà inscrit au tournoi {tournament_selected.tournament_name}")
+            return
+        tournament_selected.list_participant.append(player_selected)
+        self.repo_tournament.update(tournament_selected.tournament_name, tournament_selected.to_dict())
+        self.view.display_message(f"{player_selected} a été rajouté comme participant au tournoi {tournament_selected.tournament_name}")
