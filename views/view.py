@@ -2,6 +2,7 @@ import questionary
 
 from rich.table import Table
 from rich.console import Console
+from utils.validation import validate_field
 
 
 class View:
@@ -52,3 +53,43 @@ class View:
 
         console = Console()
         console.print(table)
+
+    def display_selected_data(self, list_data):
+        choices = [
+            questionary.Choice(
+                title=f"{data}",
+                value=data
+            )
+            for data in list_data
+        ]
+
+        data_selected = questionary.select(
+            "Sélectionner l'élément (filtrable):",
+            choices=choices,
+            use_search_filter=True,
+            use_jk_keys=False
+        ).ask()
+
+        return data_selected
+
+    def display_modify_data(self,data, fields, technic_fields):
+        mapping = dict(zip(fields, technic_fields))
+        fields_changed = questionary.checkbox(
+            "Quels champs souhaitez-vous modifier ?",
+            choices=fields
+        ).ask()
+
+        modifications = {}
+        for field in fields_changed:
+            key_technic = mapping[field]  # récupère la clé technique correspondante
+            valeur_actuelle = getattr(data, key_technic, "")
+            while True:
+                new_value = questionary.text(
+                    f"Nouvelle valeur pour {field} (actuel: {valeur_actuelle}) : (laisser vide pour annuler)",
+                    validate=lambda text: validate_field(key_technic, text)
+                ).ask()
+
+                if new_value:
+                    modifications[key_technic] = new_value
+                    break
+        return modifications
