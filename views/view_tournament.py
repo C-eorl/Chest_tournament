@@ -5,6 +5,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+from models.tournament import Tournament
 from utils.validation import validate_field
 from views.view import View
 
@@ -29,7 +30,7 @@ class ViewTournament(View):
 
         return [name, locality, description, start_date, end_date, int(round_number)]
 
-    def display_selected_tournament(self, list_current_tournament):
+    def display_selected_tournament(self, list_current_tournament) -> Tournament:
         """
         affiche la liste des tournois en cours avec selection unique
         :param list_current_tournament: list d'objet Tournament avec le statut "current"
@@ -60,22 +61,15 @@ class ViewTournament(View):
         table.add_row("Description", tournament.description)
         table.add_row("Statut", tournament.statut, style="red")
 
-        table.add_row("", "")  # Ligne vide
-        table.add_row("[bold yellow]--- Participants ---", "")  # Titre section
-        table.add_row("", "")  # Ligne vide
-
-        for participant in tournament.list_participant:
-            table.add_row("Participant", participant.strip())
-
         table_participant = Table(show_header=True)
         table_participant.add_column("Participant")
         table_participant.add_column("Score")
         for participant in tournament.list_participant:
-            table_participant.add_row(str(participant.score), str(participant))
+            table_participant.add_row( str(participant), "score")
 
 
 
         panel = Panel(table, title=f"[bold green]Tournoi : {tournament.tournament_name}", border_style="green")
-        panel_participant = Panel(table_participant, title=f"[bold green]Tournoi : {tournament.tournament_name}", border_style="green")
+        panel_participant = Panel(table_participant)
         self.console.print(panel)
         self.console.print(panel_participant)
