@@ -1,6 +1,6 @@
-from controllers.controller_interface import ControllerInterface
+from controllers.app_controller import AppController
 
 if __name__ == "__main__":
-    c = ControllerInterface()
+    c = AppController()
     while True:
         c.run()
