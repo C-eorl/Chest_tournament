@@ -24,18 +24,19 @@ class ControllerCurrentTournament:
         """Menu tournoi en cours"""
         if self.target is None:
             self.target = self.get_tournament_target()
-        title = ("Gestion du tournoi en cours\n"       # ajouter f{self target} au titre avec style 
+        self.classement_generator()
+        title = ("Gestion du tournoi en cours\n"  
+                 f"{self.target}\n"
                  "Choisissez une option:")
         option = {
-            "Affichage du Round actuel et des matchs": NotImplemented,
-            "Génèrez les matchs": self.generate_matchs,
+            "Affichage du Round actuel et des matchs": self.detail_round,
+            "Générer les matchs": self.round_generator,
             "Saisie des résultats": self.input_winner,
-            "Round suivant": NotImplemented,
+            "Round suivant": self.next_round,
             "Mettre fin au tournoi": self.finished_tournament,
             "Retour": retour
         }
         self.view.menu(title, option)
-
 
     def finished_tournament(self):
         """Définit le tournoi comme fini et met a jour la base de donnée"""
@@ -55,14 +56,13 @@ class ControllerCurrentTournament:
 
     def input_winner(self):
         """
-        Affiche tous les matchs non joué d'un round pour pouvoir en sélectionner 1 et désigner le résultat.
+        Affiche tous les matchs non joués d'un round pour pouvoir en sélectionner un et désigner le résultat.
         Puis mets à jour le classement
-        :return:
+        :return: None
         """
-
-        r = self.target.rounds
+        list_rounds = self.target.rounds
         list_match = [
-            match for match in r[-1].get_list_match()
+            match for match in list_rounds[-1].get_match_list()
             if match.score1 == 0 and match.score2 == 0
         ]
         if not list_match:
@@ -75,14 +75,19 @@ class ControllerCurrentTournament:
             for player_score in match.tuple_return():
                 self.target.classement[player_score[0]] += player_score[1]
 
+    def next_round(self):
+        """met fin au round actuelle et lance le prochain"""
+        round_current =  self.target.rounds[-1]
+        round_current.finish()
+        self.view.display_message(f"{round_current.name} est fini")
+        self.view.display_message(f"Veuillez générer les prochains matchs pour le round {len(self.target.rounds) + 1}")
 
-
-    def generate_matchs(self, list_players):
-        """Génère les matchs d'un round """
+    def matchs_generator(self, list_players):
+        """Génère les matchs d'un round grâce à une liste deja trié"""
         round_nb = len(self.target.rounds) + 1
-        r = Round(f"round {round_nb}")
-
-        while len(list) >= 2:
+        round = Round(f"round {round_nb}")
+        round.start()
+        while len(list_players) >= 2:
             match_found = False
 
             for i in range(len(list_players)):
@@ -90,11 +95,11 @@ class ControllerCurrentTournament:
 
                     player_A = list_players[i]
                     player_B = list_players[j]
-                    pair = tuple(sorted([player_A, player_B]))
+                    pair = tuple(sorted([player_A, player_B], key=lambda p: p.name))
                     if pair not in self.target.match_history:
                         # Match créé
                         m = Match(player_A, player_B)
-                        r.list_match.append(m)
+                        round.list_match.append(m)
                         self.target.match_history.add(pair)
                         list_players.remove(player_A)
                         list_players.remove(player_B)
@@ -106,11 +111,10 @@ class ControllerCurrentTournament:
                 break
         if len(list_players) == 1:
             self.target.classement[list_players[0]] += 1
-        self.target.rounds.append(r)
+        self.target.rounds.append(round)
 
-
-    def generate_classement(self):
-        """remplie le dictionnaire des participants et initialise les scores a 0.0"""
+    def classement_generator(self):
+        """remplie le dictionnaire des participants et initialise les scores à 0.0"""
         for player in self.target.list_participant:
             self.target.classement[player] = 0.0
 
@@ -122,16 +126,24 @@ class ControllerCurrentTournament:
             list_player.append(player)
         return list_player
 
-    def lancement_round(self):
-        self.generate_classement()
+    def round_generator(self):
+        # si 1er round, list mélanger puis generation de match
         if len(self.target.rounds) == 0:
             list_player = self.target.list_participant[:]
             random.shuffle(list_player)
-            self.generate_matchs(list_player)
+            self.matchs_generator(list_player)
+        # sinon list trié par odre décroissant de score puis generation de match
         else:
             list_player = self.sorted_list_participant()
-            self.generate_matchs(list_player)
-        self.input_winner()
+            self.matchs_generator(list_player)
+        self.repo_tournament.update(self.target.tournament_name, self.target.to_dict())
 
-if "__name__" == "__main__":
+    def detail_round(self):
+        if not self.target.rounds:
+            self.view.display_message("Aucun Round n'a été commencé")
+        else:
+            round_current = self.target.rounds[-1]
+            self.view.display_round(round_current)
+
+if __name__ == "__main__":
     pass
