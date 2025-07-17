@@ -13,8 +13,12 @@ class Tournament:
         self.end_date = end_date
         self.round_number = round_number
         self.description = description
-        self.list_participant = []
         self.statut = "ready"
+        self.list_participant = [] # [*Player]
+        self.classement = {}  # {Player : score}
+        self.rounds = []
+        self.match_history = set()
+
 
     def __str__(self):
         start_str = self.start_date.strftime("%d/%m/%Y")
@@ -44,7 +48,7 @@ class Tournament:
             round_number = data.get("round_number", 4)
         )
         list_participant = data.get("list_participant", [])
-        [Player.from_dict(player) for player in list_participant]
+        tournament.list_participant = [Player.from_dict(player) for player in list_participant]
         tournament.statut = data.get("statut", False)
         return tournament
 
