@@ -1,5 +1,5 @@
 def retour():
     """Appel interne de la fonction pour affiche le menu principal"""
-    from controllers.controller_interface import ControllerInterface
-    controller = ControllerInterface()
+    from controllers.app_controller import AppController
+    controller = AppController()
     return controller.run()
