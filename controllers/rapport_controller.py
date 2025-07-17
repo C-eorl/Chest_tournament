@@ -1,12 +1,12 @@
 from views.view import View
-from controllers.controller_player import ControllerPlayer
 from utils.exit_menu import retour
 
 
 class ControllerRapport:
-    def __init__(self):
+    def __init__(self, app_controller):
+        self.app = app_controller
         self.view = View()
-        self.controller_player = ControllerPlayer()
+        self.controller_player = self.app.controller_player
 
     def run(self):
         """Menu rapport"""
