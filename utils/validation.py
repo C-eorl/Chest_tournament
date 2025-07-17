@@ -44,9 +44,10 @@ def validate_field(field_name: str, value: str) -> bool | str:
                 return "La description ne peut pas être vide"
             return True
 
-        case "statue":
+        case "statut":
             if value not in ["ready", "current", "finished"]:
                 return "Le statut ne peut être que: ready, current, finished"
             return True
+
         case _:
             return f"Champ inconnu : {field_name}"
