@@ -13,12 +13,15 @@ class Round:
         return f"{self.name} avec comme resultat : {self.list_match}"
 
     def start(self):
+        """défini le debut du round"""
         self.date_time_start = datetime.now()
 
     def finish(self):
         self.date_time_end = datetime.now()
 
     def get_match_list(self):
+        """retourne la liste des matchs"""
         return self.list_match
+
 if __name__ == "__main__":
     pass
