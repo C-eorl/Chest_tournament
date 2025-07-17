@@ -2,13 +2,11 @@ from datetime import date, datetime
 
 # patern model façade
 class Player:
-    def __init__(self, name: str, firstname: str, birthdate: date, id_chess: str, score:int = 0):
+    def __init__(self, name: str, firstname: str, birthdate: date, id_chess: str):
         self.name = name
         self.firstname = firstname
         self.birthdate = birthdate
         self.id_chess = id_chess
-        self.score = score
-
 
 
     def __repr__(self):
@@ -17,15 +15,12 @@ class Player:
     def __str__(self):
         return f"{self.id_chess}: {self.name} {self.firstname}, né le {self.birthdate.strftime("%d/%m/%Y")}"
 
-    def __lt__(self, other):
-        """ dunder pour inférieur que """
-        if isinstance(other, Player):
-            return self.score < other.score
 
     def __eq__(self, other):
         """ dunder pour egal """
-        if isinstance(other, Player):
-            return self.score == other.score
+        if not isinstance(other, Player):
+            return False
+        return self.id_chess == other.id_chess
 
     def to_dict(self):
         return {
