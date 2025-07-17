@@ -1,9 +1,11 @@
 from datetime import datetime
 
 import questionary
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+from rich.text import Text
 
 from models.tournament import Tournament
 from utils.validation import validate_field
@@ -73,3 +75,21 @@ class ViewTournament(View):
         panel_participant = Panel(table_participant)
         self.console.print(panel)
         self.console.print(panel_participant)
+
+    def display_round(self, round):
+        console = Console()
+
+        title = Text(f"🏆 {round.name}", style="bold blue", justify="center")
+        console.print(Panel(title, style="blue", padding=(1, 2)))
+
+        table = Table(title="📋 Liste des Matchs", box=box.ROUNDED, show_header=True)
+        table.add_column("Joueur 1", style="magenta", width=20)
+        table.add_column("Score", justify="center", style="yellow", width=10)
+        table.add_column("Joueur 2", style="magenta", width=20)
+
+        list_match = round.get_match_list()
+
+        for match in list_match:
+                score_text = f"{match.score1} - {match.score2}"
+                table.add_row(str(match.player1), score_text, str(match.player2))
+        console.print(table)
