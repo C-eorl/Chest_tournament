@@ -2,18 +2,17 @@ from utils.decorateur_try import decorator_try
 from utils.exit_menu import retour
 from utils.database import get_db_tournament, get_db_player
 from views.view_tournament import ViewTournament
-from controllers.controller_current_tournament import ControllerCurrentTournament
 from models.tournament import Tournament
 from models.tournament_DAO import TournamentRepository
 from models.player_DAO import PlayerRepository
 
 class ControllerTournament:
-    def __init__(self):
+    def __init__(self, app_controller):
+        self.app = app_controller
         self.db_player = get_db_player()
         self.repo_player = PlayerRepository(self.db_player)
         self.db = get_db_tournament()
         self.repo_tournament = TournamentRepository(self.db)
-        self.controller_current_tournament = ControllerCurrentTournament()
         self.view = ViewTournament()
 
     @decorator_try
@@ -24,15 +23,15 @@ class ControllerTournament:
         option = {
             "Créer un nouveau tournoi": self.registration,
             "Démarrer un tournoi": self.start_tournament,
-            "Rajouter un participant": self.add_participant,
+            "Ajouter un participant": self.add_participant_to_tournament,
             "Modifier un tournoi": self.modify_tournament,
             "Supprimer un tournoi": self.delete_tournament,
             "Liste des tournois": self.list_tournaments,
             "Details d'un tournoi": self.detail_tournament,
-            "Continuez un tournoi existant": self.controller_current_tournament.run,
+            "Continuez un tournoi existant": self.app.controller_current_tournament.run,
             "Retour": retour
         }
-        exist_current = self.controller_current_tournament.list_current_tournament()
+        exist_current = self.app.controller_current_tournament.list_current_tournament()
         if not exist_current:
             option.pop("Continuez un tournoi existant")
         self.view.menu(title, option)
@@ -89,8 +88,9 @@ class ControllerTournament:
             tournament = self.view.display_selected_tournament(list_ready_tournament)
             tournament.statut = "current"
             self.repo_tournament.update(tournament.tournament_name, tournament.to_dict())
-            self.controller_current_tournament.target = tournament
-            self.controller_current_tournament.run()
+            self.app.controller_current_tournament.target = tournament
+            self.add_participant_to_tournament(self.app.controller_current_tournament.target)
+            self.app.controller_current_tournament.run()
         else:
             self.view.display_message("pas de tournoi à commencer")
 
@@ -105,12 +105,12 @@ class ControllerTournament:
         tournaments = self.repo_tournament.get_list_tournaments()
         tournament_selected = self.view.display_selected_data(tournaments)
         fields = ["Nom", "Ville", "Date de début", "Date de fin", "Nombre de round", "Description", "Statut"]
-        technic_fields = ["tournament_name", "locality", "start_date", "end_date", "round_number", "description", "Statut"]
+        technic_fields = ["tournament_name", "locality", "start_date", "end_date", "round_number", "description", "statut"]
         modifications = self.view.display_modify_data(tournament_selected, fields, technic_fields)
 
         if modifications:
             self.repo_tournament.update(tournament_selected.tournament_name, modifications)
-            self.view.display_message("Joueur modifié avec succès.")
+            self.view.display_message("Tournoi modifié avec succès.")
         else:
             self.view.display_message("Aucune modification effectuée.")
 
@@ -128,15 +128,23 @@ class ControllerTournament:
         self.view.display_tournament(tournament_selected)
 
     def add_participant(self):
-        """Rajoute un joueur dans la liste des participants d'un tournoi """
+        """Ajoute des participants à un tournoi choisi par l'utilisateur"""
         list_tournaments = self.repo_tournament.get_list_tournaments()
         tournament_selected = self.view.display_selected_tournament(list_tournaments)
+        self.add_participant_to_tournament(tournament_selected)
+
+    def add_participant_to_tournament(self, tournament: Tournament):
+        """Rajoute un ou plusieurs joueurs dans un tournoi donné"""
         players = self.repo_player.get_list_players()
-        player_selected = self.view.display_selected_data(players)
-        if player_selected in tournament_selected.list_participant:
-            self.view.display_message(
-                f"{player_selected} est déjà inscrit au tournoi {tournament_selected.tournament_name}")
-            return
-        tournament_selected.list_participant.append(player_selected)
-        self.repo_tournament.update(tournament_selected.tournament_name, tournament_selected.to_dict())
-        self.view.display_message(f"{player_selected} a été rajouté comme participant au tournoi {tournament_selected.tournament_name}")
+        players_selected = self.view.display_checkbox_data(players)
+
+        for player_selected in players_selected:
+            if player_selected not in tournament.list_participant:
+                tournament.list_participant.append(player_selected)
+                self.view.display_message(
+                    f"{player_selected} a été rajouté comme participant au tournoi {tournament.tournament_name}")
+            else:
+                self.view.display_message(
+                    f"{player_selected} est déjà inscrit au tournoi {tournament.tournament_name}")
+
+        self.repo_tournament.update(tournament.tournament_name, tournament.to_dict())
