@@ -1,6 +1,4 @@
 from datetime import datetime
-import questionary
-
 from utils.decorateur_try import decorator_try
 from utils.exit_menu import retour
 from models.player import Player
@@ -10,7 +8,8 @@ from models.player_DAO import PlayerRepository
 
 
 class ControllerPlayer:
-    def __init__(self):
+    def __init__(self, app_controller):
+        self.app = app_controller  # pas utiliser
         self.view = ViewPlayer()
         self.db = get_db_player()
         self.repo_player = PlayerRepository(self.db)
