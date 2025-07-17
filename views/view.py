@@ -72,6 +72,24 @@ class View:
 
         return data_selected
 
+    def display_checkbox_data(self, list_data):
+        choices = [
+            questionary.Choice(
+                title=f"{data}",
+                value=data
+            )
+            for data in list_data
+        ]
+
+        data_selected = questionary.checkbox(
+            "Sélectionner élément(s) (filtrable):",
+            choices=choices,
+            use_search_filter=True,
+            use_jk_keys=False
+        ).ask()
+
+        return data_selected
+
     def display_modify_data(self,data, fields, technic_fields):
         mapping = dict(zip(fields, technic_fields))
         fields_changed = questionary.checkbox(
