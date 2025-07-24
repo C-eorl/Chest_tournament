@@ -1,4 +1,3 @@
-
 from controllers.current_tournament_controller import ControllerCurrentTournament
 from controllers.player_controller import ControllerPlayer
 from controllers.tournament_controller import ControllerTournament
