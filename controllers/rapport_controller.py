@@ -31,6 +31,7 @@ class ControllerRapport:
             tournament = self.view.display_selected_data(list_tournament)
             title_table = f"Liste des joueurs pour le tournoi {tournament.tournament_name}"
             fields = ["id_chess", "name", "firstname", "birthdate"]
-            self.view.display_list_data(tournament.list_participant, title_table, fields)
+            sorted_list = sorted(tournament.list_participant, key=lambda player: player.name)
+            self.view.display_list_data(sorted_list, title_table, fields)
         else:
             self.view.display_message("Aucun tournoi dans la base de donnée")
