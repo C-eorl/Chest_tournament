@@ -15,6 +15,9 @@ class Player:
     def __str__(self):
         return f"{self.id_chess}: {self.name} {self.firstname}, né le {self.birthdate.strftime('%d/%m/%Y')}"
 
+    def simple_str(self):
+        return f"{self.id_chess}: {self.name} {self.firstname}"
+    
     def __hash__(self):
         return hash(self.id_chess)
 
