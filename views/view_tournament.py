@@ -128,10 +128,10 @@ class ViewTournament(View):
     def display_classement(self, classement):
         console = Console()
         table = Table(
-            title="Classement",
+            title="\n[#29a7ab bold]Classement",
         )
         table.add_column("Joueur")
-        table.add_column("Score")
+        table.add_column("Score", style="#29a7ab")
         for player, score in classement.items():
             table.add_row(player.simple_str(), str(score))
         console.print(table)
