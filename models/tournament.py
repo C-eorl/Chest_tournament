@@ -1,7 +1,7 @@
 from datetime import datetime, date
 
 from models.player import Player
-
+from models.round import Round
 
 
 class Tournament:
@@ -34,7 +34,15 @@ class Tournament:
             "round_number": self.round_number,
             "description": self.description,
             "list_participant": [participant.to_dict() for participant in self.list_participant],
-            "statut": self.statut
+            "statut": self.statut,
+            "classement": [
+                {"player": player.to_dict(), "score": score}
+                for player, score in self.classement.items()
+            ],
+            "rounds": [r.to_dict() for r in self.rounds],
+            "match_history": [
+                (p1.name, p2.name) for (p1, p2) in self.match_history
+            ]
         }
 
     @classmethod
@@ -49,7 +57,23 @@ class Tournament:
         )
         list_participant = data.get("list_participant", [])
         tournament.list_participant = [Player.from_dict(player) for player in list_participant]
-        tournament.statut = data.get("statut", False)
+        tournament.statut = data.get("statut", "ready")
+        tournament.classement = {
+            Player.from_dict(item["player"]): item["score"]
+            for item in data.get("classement", [])
+        }
+        tournament.rounds = [
+            Round.from_dict(r) for r in data.get("rounds", [])
+        ]
+        name_to_player = {p.name: p for p in tournament.list_participant}
+        tournament.match_history = {
+            tuple(sorted(
+                [name_to_player[n1], name_to_player[n2]],
+                key=lambda p: p.name
+            ))
+            for n1, n2 in data.get("match_history", [])
+            if n1 in name_to_player and n2 in name_to_player
+        }
         return tournament
 
     def ajout_participant(self, joueur: Player):
