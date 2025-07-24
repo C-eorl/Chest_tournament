@@ -21,4 +21,4 @@ data/tournaments/*.json
 .env
 
 # fichier configuration flake
-.flake
+.flake8
