@@ -102,6 +102,9 @@ class ControllerPlayer:
         if not modifications:
             self.view.display_message("Aucune modification effectuée.")
         else:
+            for key, value in modifications.items():
+                if key in ("name", "firstname"):
+                    modifications[key] = value.capitalize()
             self.repo_player.update(player_selected.id_chess, modifications)
             self.view.display_message("Joueur modifié avec succès.")
 
