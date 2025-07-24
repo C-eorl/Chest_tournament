@@ -9,19 +9,19 @@ def validate_field(field_name: str, value: str) -> bool | str:
     match field_name:
         case "firstname" | "name":
             if not value or any(char.isdigit() for char in value):
-                return f"Le {field_name} ne doit pas contenir de chiffres et ne peut pas être vide"
+                return f"Le nom / prénom ne doit pas contenir de chiffres et ne peut pas être vide"
             return True
 
         case "birthdate" | "end_date" | "start_date":
             pattern_date = r"^([0-2][0-9]|3[01])/([0][1-9]|1[0-2])/(\d{4})$"
             if not re.match(pattern_date, value):
-                return "Format invalide (dd/mm/aaaa)"
+                return "Format de la date est invalide (dd/mm/aaaa)"
             return True
 
         case "id_chess":
             pattern_id = r'^[A-Z]{2}\d{5}$'
             if not re.match(pattern_id, value):
-                return "Format invalide (ex: AA12345)"
+                return "Format de l'identifiant est invalide (ex: AA12345)"
             return True
 
         case "tournament_name":
