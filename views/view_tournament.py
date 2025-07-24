@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import questionary
 from rich import box
 from rich.console import Console
@@ -15,17 +13,37 @@ from views.view import View
 class ViewTournament(View):
     def __init__(self):
         self.console = Console()
+
     def input_tournament(self):
         """
         Demande à l'utilisateur les information pour le nouveau tournoi
         :return: dict des valeurs pour objet Tournament
         """
-        name = questionary.text("Nom du tournoi", validate=lambda text: validate_field("tournament_name", text)).ask()
-        locality = questionary.text("Ville: ", validate=lambda text: validate_field("locality", text)).ask()
-        round_number = questionary.text("Nombre de round: ", default="4", validate=lambda text: validate_field("round_number", text)).ask()
-        description = questionary.text("Description: ", validate=lambda text: validate_field("description", text)).ask()
-        start_date = questionary.text("Date de début du tournoi: ", validate=lambda text: validate_field("start_date", text)).ask()
-        end_date = questionary.text("Date de fin du tournoi: ", validate=lambda text: validate_field("end_date", text)).ask()
+        name = (questionary.text(
+            "Nom du tournoi",
+            validate=lambda text: validate_field("tournament_name", text)
+            ).ask())
+        locality = (questionary.text(
+            "Ville: ",
+            validate=lambda text: validate_field("locality", text)
+            ).ask())
+        round_number = (questionary.text(
+            "Nombre de round: ",
+            default="4",
+            validate=lambda text: validate_field("round_number", text)
+            ).ask())
+        description = questionary.text(
+            "Description: ",
+            validate=lambda text: validate_field("description", text)
+            ).ask()
+        start_date = questionary.text(
+            "Date de début du tournoi: ",
+            validate=lambda text: validate_field("start_date", text)
+            ).ask()
+        end_date = questionary.text(
+            "Date de fin du tournoi: ",
+            validate=lambda text: validate_field("end_date", text)
+            ).ask()
 
         return [name, locality, description, start_date, end_date, round_number]
 
@@ -50,7 +68,7 @@ class ViewTournament(View):
     def display_tournament(self, tournament):
         table = Table(show_header=False, header_style="bold magenta")
         table.add_column("Champ")
-        table.add_column("Valeur", style="bold cyan", width= 25)
+        table.add_column("Valeur", style="bold cyan", width=25)
 
         table.add_row("Nom", tournament.tournament_name)
         table.add_row("Lieu", tournament.locality)
@@ -65,20 +83,20 @@ class ViewTournament(View):
         table_participant.add_column("Score")
         for participant in tournament.list_participant:
             score = tournament.classement.get(participant, 0)
-            table_participant.add_row( str(participant), str(score))
+            table_participant.add_row(str(participant), str(score))
 
         panel = Panel(
             table,
             title=f"[bold #29a7ab]Tournoi : {tournament.tournament_name}",
             border_style="#29a7ab",
-            expand= False,
+            expand=False,
 
         )
         panel_participant = Panel(
             table_participant,
             title="[bold #29a7ab]Classement des joueurs",
             border_style="#29a7ab",
-            expand= False
+            expand=False
         )
         self.console.print(panel)
         self.console.print(panel_participant)
@@ -100,9 +118,9 @@ class ViewTournament(View):
         list_match = round.get_match_list()
         lone_player = round.lone_player
         for match in list_match:
-                score_text = f"{match.score1} - {match.score2}"
-                table.add_row(match.player1.simple_str(), score_text, match.player2.simple_str())
-                table.add_row("","","")
+            score_text = f"{match.score1} - {match.score2}"
+            table.add_row(match.player1.simple_str(), score_text, match.player2.simple_str())
+            table.add_row("", "", "")
         if lone_player:
             table.add_row(lone_player.simple_str(), "1.0 - 0.0", " / ")
         console.print(table)

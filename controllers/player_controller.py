@@ -1,6 +1,5 @@
 from datetime import datetime
 from utils.decorateur_try import decorator_try
-from utils.exit_menu import retour
 from models.player import Player
 from views.view_player import ViewPlayer
 from utils.database import get_db_player
@@ -44,7 +43,7 @@ class ControllerPlayer:
         else:
             return None
 
-    def save(self, player : Player):
+    def save(self, player: Player):
         """
         sauvegarde le joueur dans la base de donnée
         :param player : un objet Joueur
@@ -70,8 +69,6 @@ class ControllerPlayer:
             else:
                 self.view.display_message(f"L'ID {player.id_chess} est déjà utilisé")
 
-
-
     def list_players(self):
         """
         récupère la liste complète des joueurs
@@ -79,7 +76,11 @@ class ControllerPlayer:
         """
         list_players = self.repo_player.get_list_players()
         sorted_list_player = sorted(list_players, key=lambda x: x.name)
-        self.view.display_list_data(sorted_list_player, "Liste des joueurs", ["id_chess","name", "firstname", "birthdate"])
+        self.view.display_list_data(
+            sorted_list_player,
+            "Liste des joueurs",
+            ["id_chess", "name", "firstname", "birthdate"]
+        )
 
     def modify_player(self):
         """

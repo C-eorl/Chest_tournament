@@ -1,4 +1,4 @@
-from tinydb import Query, where, TinyDB
+from tinydb import Query, where
 from models.tournament import Tournament
 
 
@@ -7,7 +7,7 @@ class TournamentRepository:
         self.db = db
         self.TournamentQuery = Query()
 
-    def add(self, tournament : Tournament):
+    def add(self, tournament: Tournament):
         """Ajoute un Tournoi à la base de donnée"""
         self.db.insert(tournament.to_dict())
 
@@ -33,5 +33,5 @@ class TournamentRepository:
         tournaments_data = self.db.all()
         return [Tournament.from_dict(tournament) for tournament in tournaments_data]
 
-    def delete_tournament (self, tournament):
+    def delete_tournament(self, tournament):
         self.db.remove(where("tournament_name") == tournament.tournament_name)

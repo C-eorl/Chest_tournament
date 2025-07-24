@@ -1,5 +1,4 @@
 import questionary
-from pygments import highlight
 from rich import print
 from rich.table import Table
 from rich.console import Console
@@ -28,7 +27,7 @@ class View:
             choices=list(options.keys()),
             instruction="   - [↑] & [↓] pour naviguer, [Entrée] pour valider\n",
             qmark="▶",
-            style = style
+            style=style
         ).ask()
         if choix is None:
             return None
@@ -59,8 +58,8 @@ class View:
         for field in fields:
             table.add_column(
                 field.capitalize(),
-                width= 15,
-                header_style= "cyan bold"
+                width=15,
+                header_style="cyan bold"
             )
         for data in list_data:
             data_dict = data.to_dict()
@@ -84,7 +83,7 @@ class View:
         ])
         data_selected = questionary.select(
             "Sélectionner l'élément :",
-            style= style,
+            style=style,
             choices=choices,
             use_search_filter=True,
             use_jk_keys=False,
@@ -109,7 +108,7 @@ class View:
         ])
         data_selected = questionary.checkbox(
             "Sélectionner élément(s) (filtrable):",
-            style = style,
+            style=style,
             choices=choices,
             use_search_filter=True,
             use_jk_keys=False,
@@ -119,7 +118,7 @@ class View:
 
         return data_selected
 
-    def display_modify_data(self,data, fields, technic_fields):
+    def display_modify_data(self, data, fields, technic_fields):
         mapping = dict(zip(fields, technic_fields))
         style = questionary.Style([
             ("question", "bold #a5f2f2"),
@@ -127,7 +126,7 @@ class View:
         ])
         fields_changed = questionary.checkbox(
             "Quels champs souhaitez-vous modifier ?",
-            style= style,
+            style=style,
             choices=fields,
             qmark="▶",
             instruction="\nUtilisez [Espace] pour cocher, [↑] & [↓] pour naviguer, [Entrée] pour valider"

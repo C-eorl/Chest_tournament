@@ -1,6 +1,7 @@
 from datetime import datetime
 from models.player import Player
 
+
 class Match:
     def __init__(self, player1: Player, player2: Player):
         self.player1 = player1
@@ -24,7 +25,7 @@ class Match:
 
     @classmethod
     def from_dict(cls, data):
-        match= cls(
+        match = cls(
             player1=Player.from_dict(data["player1"]),
             player2=Player.from_dict(data["player2"])
         )
@@ -42,6 +43,7 @@ class Match:
 
     def tuple_return(self):
         return ([self.player1, self.score1], [self.player2, self.score2])
+
 
 if __name__ == "__main__":
     bd = datetime.strptime("01/11/1945", "%d/%m/%Y")

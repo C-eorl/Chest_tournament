@@ -1,5 +1,6 @@
 from functools import wraps
 
+
 def decorator_try(fonction):
     @wraps(fonction)
     def wrapper(*args):

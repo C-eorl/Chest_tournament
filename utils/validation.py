@@ -1,5 +1,6 @@
 import re
 
+
 def validate_field(field_name: str, value: str) -> bool | str:
     """
     Valide la valeur selon le champ (field_name).
@@ -9,7 +10,7 @@ def validate_field(field_name: str, value: str) -> bool | str:
     match field_name:
         case "firstname" | "name":
             if not value or any(char.isdigit() for char in value):
-                return f"Le nom / prénom ne doit pas contenir de chiffres et ne peut pas être vide"
+                return "Le nom / prénom ne doit pas contenir de chiffres et ne peut pas être vide"
             return True
 
         case "birthdate" | "end_date" | "start_date":

@@ -16,5 +16,6 @@ class AppController:
     def run(self):
         self.main_menu.run()
 
+
 if __name__ == "__main__":
     pass

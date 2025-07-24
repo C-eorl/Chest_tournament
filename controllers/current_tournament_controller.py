@@ -40,7 +40,7 @@ class ControllerCurrentTournament:
     @decorator_try
     def run(self):
         """Menu tournoi en cours"""
-        title = ("Gestion du tournoi en cours\n"  
+        title = ("Gestion du tournoi en cours\n"
                  f"{self.target}\n"
                  "Choisissez une option:")
         options = {
@@ -137,7 +137,7 @@ class ControllerCurrentTournament:
         self.view.display_message(f"{round_current.name} est fini")
 
         # Vérifier si on a atteint le nombre total de rounds
-        if len(self.target.rounds) >= self.target.round_number :
+        if len(self.target.rounds) >= self.target.round_number:
             self.finished_tournament()
             return
 
@@ -222,6 +222,7 @@ class ControllerCurrentTournament:
         else:
             round_current = self.target.rounds[-1]
             self.view.display_round(round_current)
+
 
 if __name__ == "__main__":
     pass

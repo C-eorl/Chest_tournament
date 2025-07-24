@@ -8,7 +8,7 @@ class PlayerRepository:
         self.db = db
         self.JoueurQuery = Query()
 
-    def add(self, player: Player ):
+    def add(self, player: Player):
         """Ajoute un Joueur à la base de donnée"""
         self.db.insert(player.to_dict())
 

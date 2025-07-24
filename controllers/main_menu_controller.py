@@ -1,6 +1,7 @@
 from utils.decorateur_try import decorator_try
 from views.view import View
 
+
 class MainMenuController:
     def __init__(self, app_controller):
         self.app = app_controller

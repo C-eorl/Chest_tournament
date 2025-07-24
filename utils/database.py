@@ -1,7 +1,7 @@
 import json
 import os
 
-from tinydb import TinyDB, Query
+from tinydb import TinyDB
 from dotenv import load_dotenv
 
 
@@ -9,6 +9,7 @@ load_dotenv()
 
 PATH_PLAYERS = os.getenv("PATH_PLAYERS")
 PATH_TOURNAMENTS = os.getenv("PATH_TOURNAMENTS")
+
 
 def initialization_db():
     """
@@ -27,6 +28,7 @@ def initialization_db():
         else:
             print(f"La base de donnée {name_file} existe déjà")
 
+
 def format_db(path: str):
     """
     formate la tinyDB pour une version plus lisible
@@ -43,8 +45,10 @@ def format_db(path: str):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
+
 def get_db_player() -> TinyDB:
     return TinyDB(PATH_PLAYERS)
+
 
 def get_db_tournament() -> TinyDB:
     return TinyDB(PATH_TOURNAMENTS)

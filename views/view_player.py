@@ -21,7 +21,7 @@ class ViewPlayer(View):
             name = name.capitalize()
         birthdate = questionary.text(
             "Date de naissance (dd/mm/aaaa) :",
-            validate=lambda text: validate_field("birthdate",text),
+            validate=lambda text: validate_field("birthdate", text),
             qmark="✦",
         ).ask()
         id_chess = questionary.text("ID national d'échec (ex: AA12345) :",

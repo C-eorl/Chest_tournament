@@ -1,12 +1,12 @@
 from datetime import datetime
 
 from utils.decorateur_try import decorator_try
-from utils.exit_menu import retour
 from utils.database import get_db_tournament, get_db_player
 from views.view_tournament import ViewTournament
 from models.tournament import Tournament
 from models.tournament_DAO import TournamentRepository
 from models.player_DAO import PlayerRepository
+
 
 class ControllerTournament:
     def __init__(self, app_controller):
@@ -18,7 +18,7 @@ class ControllerTournament:
         self.view = ViewTournament()
 
     @decorator_try
-    def run (self):
+    def run(self):
         """Menu tournoi"""
         title = "Gestion des tournois - Choisissez une option:\n"
         options = {
@@ -43,7 +43,7 @@ class ControllerTournament:
 
     def get_tournament(self) -> Tournament | None:
         """Récupère et renvoie les entrées de l'utilisateur """
-        info_tournament= self.view.input_tournament()
+        info_tournament = self.view.input_tournament()
 
         if None in info_tournament:
             return None
@@ -80,7 +80,11 @@ class ControllerTournament:
         """Récupère la list[Tournament] de tous les tournois et appelle fonction view pour afficher """
         list_tournaments = self.repo_tournament.get_list_tournaments()
         if list_tournaments:
-            self.view.display_list_data(list_tournaments, "Liste des tournois", ["tournament_name", "locality", "start_date", "end_date", "statut"])
+            self.view.display_list_data(
+                list_tournaments,
+                "Liste des tournois",
+                ["tournament_name", "locality", "start_date", "end_date", "statut"]
+            )
         else:
             self.view.display_message("Aucun tournoi dans la base de donnée")
 
@@ -130,7 +134,13 @@ class ControllerTournament:
             return
 
         fields = ["Nom", "Ville", "Date de début", "Date de fin", "Nombre de round", "Description", "Statut"]
-        technic_fields = ["tournament_name", "locality", "start_date", "end_date", "round_number", "description", "statut"]
+        technic_fields = ["tournament_name",
+                          "locality",
+                          "start_date",
+                          "end_date",
+                          "round_number",
+                          "description",
+                          "statut"]
         modifications = self.view.display_modify_data(tournament_selected, fields, technic_fields)
 
         if modifications:
@@ -180,9 +190,9 @@ class ControllerTournament:
             if player_selected not in tournament.list_participant:
                 tournament.list_participant.append(player_selected)
                 self.view.display_message(
-                    f"{player_selected.simple_str()} a été rajouté comme participant au tournoi {tournament.tournament_name}")
+                    f"{player_selected.simple_str()} a été rajouté comme"
+                    f" participant au tournoi {tournament.tournament_name}")
             else:
                 self.view.display_message(
                     f"{player_selected.simple_str()} est déjà inscrit au tournoi {tournament.tournament_name}")
         self.repo_tournament.update(tournament.tournament_name, tournament.to_dict())
-

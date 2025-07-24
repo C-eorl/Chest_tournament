@@ -6,7 +6,13 @@ from models.round import Round
 
 class Tournament:
 
-    def __init__(self, tournament_name: str, locality: str, description: str, start_date: date, end_date: date, round_number: int =4):
+    def __init__(self,
+                 tournament_name: str,
+                 locality: str,
+                 description: str,
+                 start_date: date,
+                 end_date: date,
+                 round_number: int = 4):
         self.tournament_name = tournament_name
         self.locality = locality
         self.start_date = start_date
@@ -14,11 +20,10 @@ class Tournament:
         self.round_number = round_number
         self.description = description
         self.statut = "ready"
-        self.list_participant = [] # [*Player]
+        self.list_participant = []  # [*Player]
         self.classement = {}  # {Player : score}
         self.rounds = []
         self.match_history = set()
-
 
     def __str__(self):
         start_str = self.start_date.strftime("%d/%m/%Y")
@@ -48,12 +53,12 @@ class Tournament:
     @classmethod
     def from_dict(cls, data):
         tournament = cls(
-            tournament_name = data["tournament_name"],
-            locality = data["locality"],
-            description = data["description"],
+            tournament_name=data["tournament_name"],
+            locality=data["locality"],
+            description=data["description"],
             start_date=datetime.strptime(data["start_date"], "%d/%m/%Y").date(),
             end_date=datetime.strptime(data["end_date"], "%d/%m/%Y").date(),
-            round_number = data.get("round_number", 4)
+            round_number=data.get("round_number", 4)
         )
         list_participant = data.get("list_participant", [])
         tournament.list_participant = [Player.from_dict(player) for player in list_participant]
