@@ -17,25 +17,32 @@ class ControllerPlayer:
     @decorator_try
     def run(self):
         """Menu joueur"""
-        title = ("Gestion des joueurs\n"
-                 "Choisissez une option:")
-        option = {
+        title = "Gestion des joueurs - Choisissez une option:\n"
+        options = {
             "Ajouter un joueur": self.registration_player,
             "Modifier un joueur": self.modify_player,
             "Liste des joueurs": self.list_players,
-            "Retour": retour
+            "Retour": None
         }
-        self.view.menu(title, option)
 
-    def get_player(self) -> Player:
+        while True:
+            choice = self.view.menu(title, options)
+            if choice is None:
+                break
+            choice()
+
+    def get_player(self) -> Player | None:
         """
-        Récupère les données transmisent par l'utilisateur, transforme la date
+        Récupère les données transmises par l'utilisateur, transforme la date
         :return: Player avec les données utilisateur
         """
-        info_player = self.view.input_player()
-        info_player[2] = datetime.strptime(info_player[2], "%d/%m/%Y").date()
 
-        return Player(info_player[0], info_player[1], info_player[2], info_player[3])
+        info_player = self.view.input_player()
+        if None not in info_player:
+            info_player[2] = datetime.strptime(info_player[2], "%d/%m/%Y").date()
+            return Player(info_player[0], info_player[1], info_player[2], info_player[3])
+        else:
+            return None
 
     def save(self, player : Player):
         """
@@ -53,15 +60,21 @@ class ControllerPlayer:
         Récupère un object Joueur et appelle la fonction save() pour enregistrer le Joueur, affiche un message.
         :return: None
         """
-        joueur = self.get_player()
-        if self.save(joueur):
-            self.view.display_message(f"{str(joueur)} a été ajouté à la base de donnée")
+        player = self.get_player()
+        if player is None:
+            self.view.display_message("Annulation de la saisie du joueur, information manquante")
+            self.view.display_message("Le joueur n'a pas pu être ajouté à la base de donnée")
         else:
-            self.view.display_message(f"{str(joueur)} existe déjà dans la base de donnée")
+            if self.save(player):
+                self.view.display_message(f"{str(player)} a été ajouté à la base de donnée")
+            else:
+                self.view.display_message(f"L'ID {player.id_chess} est déjà utilisé")
+
+
 
     def list_players(self):
         """
-        récupere la liste complète des joueurs
+        récupère la liste complète des joueurs
         :return: dict de tous les joueurs
         """
         list_players = self.repo_player.get_list_players()
@@ -74,19 +87,22 @@ class ControllerPlayer:
         Demande la modification puis mets à jour le joueur dans la base de donnée
         :return: None
         """
-        self.view.display_message("Quel joueur voulez-vous modifier : ")
+        self.view.separator()
+        self.view.display_message("Quel joueur voulez-vous modifier ? ")
         players = self.repo_player.get_list_players()
         player_selected = self.view.display_selected_data(players)
-
-        fields = ["Nom", "prénom", "date de naissance", "id_echec"]
-        technic_fields = ["name", "firstname", "birthdate", "id_chess"]
+        if not player_selected:
+            self.view.display_message("Annulation de la modification du joueur")
+            return
+        fields = ["Nom", "prénom", "date de naissance"]
+        technic_fields = ["name", "firstname", "birthdate"]
         modifications = self.view.display_modify_data(player_selected, fields, technic_fields)
 
-        if modifications:
+        if not modifications:
+            self.view.display_message("Aucune modification effectuée.")
+        else:
             self.repo_player.update(player_selected.id_chess, modifications)
             self.view.display_message("Joueur modifié avec succès.")
-        else:
-            self.view.display_message("Aucune modification effectuée.")
 
 
 if __name__ == "__main__":
