@@ -19,4 +19,4 @@ data/tournaments/*.json
 
 # ignore fichier configuration
 .env
-.flake8
+
