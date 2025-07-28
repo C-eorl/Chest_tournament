@@ -1,5 +1,4 @@
 from datetime import datetime, date
-
 from models.player import Player
 from models.round import Round
 
@@ -31,6 +30,7 @@ class Tournament:
         return f"Tournoi {self.tournament_name} à {self.locality} (Début: {start_str} - Fin: {end_str})"
 
     def to_dict(self):
+        """renvoi un dict de l'objet"""
         return {
             "tournament_name": self.tournament_name,
             "locality": self.locality,
@@ -52,6 +52,7 @@ class Tournament:
 
     @classmethod
     def from_dict(cls, data):
+        """renvoie un objet grâce à un dict"""
         tournament = cls(
             tournament_name=data["tournament_name"],
             locality=data["locality"],
@@ -84,7 +85,3 @@ class Tournament:
     def ajout_participant(self, joueur: Player):
         """ Ajoute un Joueur au tournoi """
         self.list_participant.append(joueur)
-
-
-if __name__ == "__main__":
-    pass

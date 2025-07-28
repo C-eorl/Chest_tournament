@@ -1,4 +1,3 @@
-from datetime import datetime
 from models.player import Player
 
 
@@ -16,6 +15,7 @@ class Match:
         return f"{self.player1.simple_str()} contre {self.player2.simple_str()}"
 
     def to_dict(self):
+        """renvoi un dict de l'objet"""
         return {
             "player1": self.player1.to_dict(),
             "player2": self.player2.to_dict(),
@@ -25,6 +25,7 @@ class Match:
 
     @classmethod
     def from_dict(cls, data):
+        """renvoie un objet grâce à un dict"""
         match = cls(
             player1=Player.from_dict(data["player1"]),
             player2=Player.from_dict(data["player2"])
@@ -34,6 +35,7 @@ class Match:
         return match
 
     def get_result(self, winner):
+        """determine le résultat du match"""
         match winner:
             case self.player1: self.score1 = 1.0
             case self.player2: self.score2 = 1.0
@@ -42,14 +44,5 @@ class Match:
                 self.score2 = 0.5
 
     def tuple_return(self):
+        """renvoi un tuple des résultats du match"""
         return ([self.player1, self.score1], [self.player2, self.score2])
-
-
-if __name__ == "__main__":
-    bd = datetime.strptime("01/11/1945", "%d/%m/%Y")
-    p = Player("Test", "Test", bd, "QZ11122")
-    bd2 = datetime.strptime("15/09/1985", "%d/%m/%Y")
-    p2 = Player("Zenzr", "Zerzef", bd, "QZ11122")
-    m = Match(p, p2)
-
-    print(m)

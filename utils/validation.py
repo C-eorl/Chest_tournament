@@ -4,7 +4,10 @@ import re
 def validate_field(field_name: str, value: str) -> bool | str:
     """
     Valide la valeur selon le champ (field_name).
+    Empêche d'entrer une mauvaise donnée.
     Retourne True si valide, sinon un message d'erreur.
+    :param field_name: paramètre à modifier
+    :param value: valeur entrée par l'utilisateur
     """
 
     match field_name:

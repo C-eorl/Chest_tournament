@@ -32,8 +32,8 @@ class ControllerPlayer:
 
     def get_player(self) -> Player | None:
         """
-        Récupère les données transmises par l'utilisateur, transforme la date
-        :return: Player avec les données utilisateur
+        Récupère les données transmises par l'utilisateur, transforme la date de naissance en objet Datetime
+        :return: Player avec les données utilisateur sinon None
         """
 
         info_player = self.view.input_player()
@@ -46,7 +46,7 @@ class ControllerPlayer:
     def save(self, player: Player):
         """
         sauvegarde le joueur dans la base de donnée
-        :param player : un objet Joueur
+        :param player : un objet Player
         :return: True si le joueur n'existe pas et le rajoute à la base de donnée, False s'il existe
         """
         if not self.repo_player.search(player.id_chess):
@@ -71,8 +71,7 @@ class ControllerPlayer:
 
     def list_players(self):
         """
-        récupère la liste complète des joueurs
-        :return: dict de tous les joueurs
+        récupère la liste complète des joueurs, la trie et l'affiche
         """
         list_players = self.repo_player.get_list_players()
         sorted_list_player = sorted(list_players, key=lambda x: x.name)
@@ -107,7 +106,3 @@ class ControllerPlayer:
                     modifications[key] = value.capitalize()
             self.repo_player.update(player_selected.id_chess, modifications)
             self.view.display_message("Joueur modifié avec succès.")
-
-
-if __name__ == "__main__":
-    pass

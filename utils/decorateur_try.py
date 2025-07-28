@@ -2,6 +2,7 @@ from functools import wraps
 
 
 def decorator_try(fonction):
+    """décorateur pour intercepter les erreurs"""
     @wraps(fonction)
     def wrapper(*args):
         try:

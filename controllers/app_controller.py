@@ -14,8 +14,5 @@ class AppController:
         self.main_menu = MainMenuController(self)
 
     def run(self):
+        """Lance la fonction de départ du memu principal"""
         self.main_menu.run()
-
-
-if __name__ == "__main__":
-    pass

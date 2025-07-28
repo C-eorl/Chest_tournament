@@ -42,7 +42,7 @@ class ControllerTournament:
             choice()
 
     def get_tournament(self) -> Tournament | None:
-        """Récupère et renvoie les entrées de l'utilisateur """
+        """Récupère et renvoie les entrées de l'utilisateur en objet Tournament"""
         info_tournament = self.view.input_tournament()
 
         if None in info_tournament:
@@ -172,13 +172,21 @@ class ControllerTournament:
             self.view.display_message("Aucun tournoi dans la base de donnée")
 
     def add_participant(self):
-        """Ajoute des participants à un tournoi choisi par l'utilisateur"""
+        """
+        Récupère la liste des tournois, affiche et demande de sélectionner un tournoi
+        Et appelle la fonction pour ajouter des joueurs au tournoi sélectionné
+        """
         list_tournaments = self.repo_tournament.get_list_tournaments()
         tournament_selected = self.view.display_selected_tournament(list_tournaments)
         self.add_participant_to_tournament(tournament_selected)
 
     def add_participant_to_tournament(self, tournament: Tournament):
-        """Rajoute un ou plusieurs joueurs dans un tournoi donné"""
+        """
+        Récupère la liste des joueurs et demande une multiple selection
+        Puis les rajoute à la liste des participants du tournoi.
+        Mets à jour la DB
+        :param tournament: objet Tournament
+        """
         players = self.repo_player.get_list_players()
         players_selected = self.view.display_checkbox_data(players)
 

@@ -6,7 +6,10 @@ from views.view import View
 class ViewPlayer(View):
 
     def input_player(self):
-
+        """
+        Demande les informations pour créer un Player
+        :return: list des valeurs entrées par l'utilisateur
+        """
         firstname = questionary.text("Prénom :",
                                      validate=lambda text: validate_field("firstname", text),
                                      qmark="✦",

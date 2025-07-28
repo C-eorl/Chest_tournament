@@ -66,6 +66,7 @@ class ViewTournament(View):
         return target
 
     def display_tournament(self, tournament):
+        """Affiche les informations d'un tournoi"""
         table = Table(show_header=False, header_style="bold magenta")
         table.add_column("Champ")
         table.add_column("Valeur", style="bold cyan", width=25)
@@ -102,6 +103,7 @@ class ViewTournament(View):
         self.console.print(panel_participant)
 
     def display_round(self, round):
+        """Affiche les informations d'un Round"""
         console = Console()
 
         title = Text(f"🏆 {round.name}", style="bold #29a7ab", justify="center")
@@ -126,6 +128,9 @@ class ViewTournament(View):
         console.print(table)
 
     def display_classement(self, classement):
+        """Affiche le classement d'un tournoi
+        :param classement : dict {Player: score}
+        """
         console = Console()
         table = Table(
             title="\n[#29a7ab bold]Classement",

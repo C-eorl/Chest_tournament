@@ -25,7 +25,9 @@ class ControllerRapport:
             choice()
 
     def players_in_tournament(self):
-
+        """
+        Demande à l'utilisateur un tournoi et affiche les joueurs du tournoi
+        """
         list_tournament = self.controller_tournament.repo_tournament.get_list_tournaments()
         if list_tournament:
             tournament = self.view.display_selected_data(list_tournament)

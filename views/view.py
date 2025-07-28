@@ -39,13 +39,6 @@ class View:
         """
         print(f"\n[bold]{message}")
 
-    def display_error(self, error):
-        """
-        Affiche l'erreur
-        :param error: str
-        """
-        print(f"Error: {error}")
-
     def display_list_data(self, list_data: list, title_table: str, fields: list):
         """
         Affiche un tableau avec les données passée (Player, Tournament)
@@ -70,6 +63,9 @@ class View:
         console.print(table)
 
     def display_selected_data(self, list_data):
+        """Affiche une liste pour sélectionner un élément avec possibilité de filtrer
+        :return : le choix de l'utilisateur
+        """
         choices = [
             questionary.Choice(
                 title=f"{data}",
@@ -95,6 +91,9 @@ class View:
         return data_selected
 
     def display_checkbox_data(self, list_data):
+        """Affiche une liste pour sélectionner plusieurs éléments avec possibilité de filtrer
+        :return : le choix de l'utilisateur
+        """
         choices = [
             questionary.Choice(
                 title=f"{data}",
@@ -107,18 +106,26 @@ class View:
             ("instruction", "#a0adad")
         ])
         data_selected = questionary.checkbox(
-            "Sélectionner élément(s) (filtrable):",
+            "Sélectionner élément(s):",
             style=style,
             choices=choices,
             use_search_filter=True,
             use_jk_keys=False,
             qmark="▶",
-            instruction="\nUtilisez [Espace] pour cocher, [↑] & [↓] pour naviguer, [Entrée] pour valider",
+            instruction="\nUtilisez [Espace] pour cocher, [↑] & [↓] pour naviguer, [Entrée] pour valider"
+                        "\nPossibilité de filtrage textuel\n",
         ).ask()
 
         return data_selected
 
     def display_modify_data(self, data, fields, technic_fields):
+        """
+        "Affiche les champs de l'objet à modifier puis demande une nouvelle valeur pour chaque champ à modifier
+        :param data: Objet à modifier
+        :param fields: les champs traduit
+        :param technic_fields: les champs exacts de l'objet
+        :return: dict des modifications
+        """
         mapping = dict(zip(fields, technic_fields))
         style = questionary.Style([
             ("question", "bold #a5f2f2"),

@@ -17,6 +17,7 @@ class Round:
         return f"{self.name} avec comme resultat : {self.list_match}"
 
     def to_dict(self):
+        """renvoi un dict de l'objet"""
         return {
             "name": self.name,
             "list_match": [match.to_dict() for match in self.list_match],
@@ -27,6 +28,7 @@ class Round:
 
     @classmethod
     def from_dict(cls, data):
+        """renvoie un objet grâce à un dict"""
         round = cls(data["name"])
         round.list_match = [Match.from_dict(m) for m in data.get("list_match", [])]
         lone_player = data.get("lone_player")
@@ -38,16 +40,13 @@ class Round:
         return round
 
     def start(self):
-        """défini le debut du round"""
+        """Défini le debut du round"""
         self.date_time_start = datetime.now()
 
     def finish(self):
+        """Défini la fin du round"""
         self.date_time_end = datetime.now()
 
     def get_match_list(self):
-        """retourne la liste des matchs"""
+        """Retourne la liste des matchs"""
         return self.list_match
-
-
-if __name__ == "__main__":
-    pass

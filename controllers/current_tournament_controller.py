@@ -17,7 +17,7 @@ class ControllerCurrentTournament:
 
     def validate_tournament(self):
         """
-        vérifie si le tournoi cible (self.target) est pas valide:
+        vérifie si le tournoi cible (self.target) n'est pas valide:
         - possède des participants
         - s'il est fini
         - ou None dans ce cas, demande quel tournoi utiliser
@@ -65,18 +65,19 @@ class ControllerCurrentTournament:
         self.target.statut = "finished"
         self.repo_tournament.update(self.target.tournament_name, self.target.to_dict())
         self.view.display_message("le tournoi est terminé")
-        return None
+        return
 
     def list_current_tournament(self):
         """retourne une liste de tous les tournois en cours"""
         return [Tournament.from_dict(tournoi) for tournoi in self.repo_tournament.search_is("current")]
 
     def display_classement(self):
+        """Affiche le classement du tournoi en cours"""
         classement = dict(sorted(self.target.classement.items(), key=lambda x: x[1], reverse=True))
         self.view.display_classement(classement)
 
     def get_tournament_target(self) -> Tournament:
-        """renvoie le tournoi en cours ciblé pour l'utiliser"""
+        """renvoie le tournoi en cours selectionner pour l'utiliser"""
         current_tournaments = self.list_current_tournament()
         return self.view.display_selected_tournament(current_tournaments)
 
@@ -107,7 +108,12 @@ class ControllerCurrentTournament:
             self.view.display_message(f"Résultat du match: {winner}")
 
     def next_round(self):
-        """met fin au round actuel et crée le round suivant vide (sans générer les matchs)"""
+        """
+        Met en place le 1er Round si aucun round dans la liste de round du tournoi en cours puis actualise de DB.
+        Vérifie si les matchs ont été générés ou s'il y reste des matchs à finir.
+        Défini le round comme terminée
+        Vérifie si dernier round du tournoi. Sinon Lance le prochain round
+        """
         list_rounds = self.target.rounds
 
         if not list_rounds:
@@ -196,7 +202,10 @@ class ControllerCurrentTournament:
         return list_player
 
     def round_generator(self):
-        """Génère les matchs pour le round en cours (sans créer un nouveau round)"""
+        """
+        Génère les matchs pour le round en cours
+        En vérifiant, si des rounds existent, si le round est terminée, si les matchs sont deja généré
+        """
         if not self.target.rounds:
             self.view.display_message("Aucun round n'existe. Veuillez commencer un round avant de générer les matchs.")
             return
@@ -222,7 +231,3 @@ class ControllerCurrentTournament:
         else:
             round_current = self.target.rounds[-1]
             self.view.display_round(round_current)
-
-
-if __name__ == "__main__":
-    pass

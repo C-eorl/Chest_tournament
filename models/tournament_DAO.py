@@ -16,7 +16,7 @@ class TournamentRepository:
         return self.db.search(self.TournamentQuery.name == name)
 
     def search_is(self, statut: str) -> dict | None:
-        """Recherche un tournoi grâce à son name"""
+        """Recherche un tournoi grâce à son statut"""
         return self.db.search(where("statut") == statut)
 
     def update(self, name: str, valeur: dict):
@@ -34,4 +34,5 @@ class TournamentRepository:
         return [Tournament.from_dict(tournament) for tournament in tournaments_data]
 
     def delete_tournament(self, tournament):
+        """Supprime un tournoi"""
         self.db.remove(where("tournament_name") == tournament.tournament_name)
