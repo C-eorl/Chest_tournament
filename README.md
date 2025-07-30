@@ -49,7 +49,7 @@ https://www.python.org/downloads/release/python-3120/
 ### 1. Cloner ce dépôt
 ```bash
 git clone git@github.com:C-eorl/Chest_tournament.git
-cd Chest_tournement
+cd Chest_tournament
 ```
 ### 2. Créer un environnement virtuel
 ```bash
