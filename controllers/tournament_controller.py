@@ -26,7 +26,7 @@ class ControllerTournament:
             "Démarrer un tournoi": self.start_tournament,
             "Ajouter des participant": self.add_participant,
             "Modifier un tournoi": self.modify_tournament,
-            "Supprimer un tournoi": self.delete_tournament,
+            # "Supprimer un tournoi": self.delete_tournament,
             "Liste des tournois": self.list_tournaments,
             "Details d'un tournoi": self.detail_tournament,
             "Continuez un tournoi existant": self.app.controller_current_tournament.run,
@@ -149,18 +149,19 @@ class ControllerTournament:
         else:
             self.view.display_message("Aucune modification effectuée.")
 
-    def delete_tournament(self):
-        """Supprime un tournoi de la base de donnée"""
-        list_tournaments = self.repo_tournament.get_list_tournaments()
-        if not list_tournaments:
-            self.view.display_message("Aucun tournoi à supprimer")
-            return
-        tournament_selected = self.view.display_selected_tournament(list_tournaments)
-        if not tournament_selected:
-            self.view.display_message("Annulation de la suppression")
-        else:
-            self.repo_tournament.delete_tournament(tournament_selected)
-            self.view.display_message(f"{tournament_selected} a été supprimé de la base de donnée")
+    # Fonction non demandée
+    # def delete_tournament(self):
+    #     """Supprime un tournoi de la base de donnée"""
+    #     list_tournaments = self.repo_tournament.get_list_tournaments()
+    #     if not list_tournaments:
+    #         self.view.display_message("Aucun tournoi à supprimer")
+    #         return
+    #     tournament_selected = self.view.display_selected_tournament(list_tournaments)
+    #     if not tournament_selected:
+    #         self.view.display_message("Annulation de la suppression")
+    #     else:
+    #         self.repo_tournament.delete_tournament(tournament_selected)
+    #         self.view.display_message(f"{tournament_selected} a été supprimé de la base de donnée")
 
     def detail_tournament(self):
         """Affiche les détails d'un tournoi """
@@ -178,7 +179,11 @@ class ControllerTournament:
         """
         list_tournaments = self.repo_tournament.get_list_tournaments()
         tournament_selected = self.view.display_selected_tournament(list_tournaments)
-        self.add_participant_to_tournament(tournament_selected)
+        if tournament_selected.statut == "current":
+            if self.view.confirmed_message():
+                self.add_participant_to_tournament(tournament_selected)
+            else:
+                self.view.display_message("Annulation d'ajout de participant")
 
     def add_participant_to_tournament(self, tournament: Tournament):
         """
