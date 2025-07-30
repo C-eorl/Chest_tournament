@@ -127,6 +127,21 @@ class ViewTournament(View):
             table.add_row(lone_player.simple_str(), "1.0 - 0.0", " / ")
         console.print(table)
 
+    def confirmed_message(self):
+        self.display_message("Le tournoi choisi est en cours."
+                             "\nL'ajout de nouveau participant peut avoir des résultats non attendu")
+        choices = ["oui", "non"]
+        anwers = questionary.select(
+            "Êtes-vous sure de continuer ?",
+            choices=choices,
+            qmark="✦",
+            instruction="\n[↑] & [↓] pour naviguer, [Entrée] pour valider"
+        ).ask()
+        if anwers == "oui":
+            return True
+        else:
+            return False
+
     def display_classement(self, classement):
         """Affiche le classement d'un tournoi
         :param classement : dict {Player: score}

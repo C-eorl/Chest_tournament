@@ -84,7 +84,7 @@ class View:
             use_search_filter=True,
             use_jk_keys=False,
             qmark="▶",
-            instruction="\nUtilisez [Espace] pour cocher, [↑] & [↓] pour naviguer, [Entrée] pour valider"
+            instruction="\n[↑] & [↓] pour naviguer, [Entrée] pour valider"
                         "\nPossibilité de filtrage textuel\n"
         ).ask()
 
