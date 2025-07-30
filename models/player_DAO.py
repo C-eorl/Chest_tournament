@@ -6,19 +6,8 @@ from models.player import Player
 
 class PlayerRepository:
     def __init__(self, db):
-        self.initialise_data_directories()
         self.db = db
         self.JoueurQuery = Query()
-
-    def initialise_data_directories(self):
-        if not os.path.exists("data"):
-            os.makedirs("data")
-            print("Dossier 'data' créé.")
-
-        players_path = os.path.join("data", "players")
-        if not os.path.exists(players_path):
-            os.makedirs(players_path)
-            print("Dossier 'data/players' créé.")
 
     def add(self, player: Player):
         """Ajoute un Joueur à la base de donnée"""
