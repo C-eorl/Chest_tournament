@@ -10,6 +10,22 @@ PATH_PLAYERS = os.getenv("PATH_PLAYERS")
 PATH_TOURNAMENTS = os.getenv("PATH_TOURNAMENTS")
 
 
+def initialise_data_directories():
+    if not os.path.exists("data"):
+        os.makedirs("data")
+        print("Dossier 'data' créé.")
+
+    players_path = os.path.join("data", "players")
+    if not os.path.exists(players_path):
+        os.makedirs(players_path)
+        print("Dossier 'data/players' créé.")
+
+    tournament_path = os.path.join("data", "tournament")
+    if not os.path.exists(tournament_path):
+        os.makedirs(tournament_path)
+        print("Dossier 'data/players' créé.")
+
+
 def format_db(path: str):
     """
     formate la tinyDB pour une version plus lisible

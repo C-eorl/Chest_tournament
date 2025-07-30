@@ -6,19 +6,9 @@ from models.tournament import Tournament
 
 class TournamentRepository:
     def __init__(self, db):
-        self.initialise_data_directories()
         self.db = db
         self.TournamentQuery = Query()
 
-    def initialise_data_directories(self):
-        if not os.path.exists("data"):
-            os.makedirs("data")
-            print("Dossier 'data' créé.")
-
-        players_path = os.path.join("data", "players")
-        if not os.path.exists(players_path):
-            os.makedirs(players_path)
-            print("Dossier 'data/players' créé.")
 
     def add(self, tournament: Tournament):
         """Ajoute un Tournoi à la base de donnée"""

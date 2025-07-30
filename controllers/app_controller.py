@@ -3,6 +3,7 @@ from controllers.player_controller import ControllerPlayer
 from controllers.tournament_controller import ControllerTournament
 from controllers.rapport_controller import ControllerRapport
 from controllers.main_menu_controller import MainMenuController
+from utils.database import initialise_data_directories
 
 
 class AppController:
@@ -14,5 +15,6 @@ class AppController:
         self.main_menu = MainMenuController(self)
 
     def run(self):
-        """Lance la fonction de départ du memu principal"""
+        """Lance la fonction de départ du memu principal et initialise les dossiers DB"""
+        initialise_data_directories()
         self.main_menu.run()
