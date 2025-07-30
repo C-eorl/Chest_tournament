@@ -8,7 +8,7 @@ from models.player_DAO import PlayerRepository
 
 class ControllerPlayer:
     def __init__(self, app_controller):
-        self.app = app_controller  # pas utiliser
+        self.app = app_controller
         self.view = ViewPlayer()
         self.db = get_db_player()
         self.repo_player = PlayerRepository(self.db)

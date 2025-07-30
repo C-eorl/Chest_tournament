@@ -9,7 +9,7 @@ from views.view_tournament import ViewTournament
 
 class ControllerCurrentTournament:
     def __init__(self, app_controller):
-        self.app = app_controller  # pas utiliser
+        self.app = app_controller
         self.view = ViewTournament()
         self.db = get_db_tournament()
         self.repo_tournament = TournamentRepository(self.db)
