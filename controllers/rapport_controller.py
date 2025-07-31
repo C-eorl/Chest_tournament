@@ -1,3 +1,4 @@
+from utils.decorateur_try import decorator_try
 from views.view import View
 
 
@@ -8,6 +9,7 @@ class ControllerRapport:
         self.controller_player = self.app.controller_player
         self.controller_tournament = self.app.controller_tournament
 
+    @decorator_try
     def run(self):
         """Menu rapport"""
         title = "Gestion des rapports - Choisissez une option:\n"
