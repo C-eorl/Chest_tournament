@@ -59,7 +59,7 @@ class Tournament:
             description=data["description"],
             start_date=datetime.strptime(data["start_date"], "%d/%m/%Y").date(),
             end_date=datetime.strptime(data["end_date"], "%d/%m/%Y").date(),
-            round_number=data.get("round_number", 4)
+            round_number=int(data.get("round_number", 4))
         )
         list_participant = data.get("list_participant", [])
         tournament.list_participant = [Player.from_dict(player) for player in list_participant]
