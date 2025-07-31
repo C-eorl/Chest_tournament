@@ -184,6 +184,9 @@ class ControllerTournament:
                 self.add_participant_to_tournament(tournament_selected)
             else:
                 self.view.display_message("Annulation d'ajout de participant")
+                return
+        else:
+            self.add_participant_to_tournament(tournament_selected)
 
     def add_participant_to_tournament(self, tournament: Tournament):
         """
