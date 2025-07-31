@@ -14,5 +14,5 @@ class AppController:
         self.main_menu = MainMenuController(self)
 
     def run(self):
-        """Lance la fonction de départ du memu principal et initialise les dossiers DB"""
+        """Lance la fonction de départ du memu principal"""
         self.main_menu.run()
