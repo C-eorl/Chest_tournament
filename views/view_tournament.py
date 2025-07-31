@@ -79,13 +79,6 @@ class ViewTournament(View):
         table.add_row("Description", tournament.description)
         table.add_row("Statut", tournament.statut, style="red")
 
-        table_participant = Table(show_header=True)
-        table_participant.add_column("Participant")
-        table_participant.add_column("Score")
-        for participant in tournament.list_participant:
-            score = tournament.classement.get(participant, 0)
-            table_participant.add_row(str(participant), str(score))
-
         panel = Panel(
             table,
             title=f"[bold #29a7ab]Tournoi : {tournament.tournament_name}",
@@ -93,14 +86,9 @@ class ViewTournament(View):
             expand=False,
 
         )
-        panel_participant = Panel(
-            table_participant,
-            title="[bold #29a7ab]Classement des joueurs",
-            border_style="#29a7ab",
-            expand=False
-        )
         self.console.print(panel)
-        self.console.print(panel_participant)
+        sorted_classement = dict(sorted(tournament.classement.items(), key=lambda x: x[1], reverse=True))
+        self.display_classement(sorted_classement)
 
     def display_round(self, round):
         """Affiche les informations d'un Round"""
