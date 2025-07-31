@@ -1,5 +1,3 @@
-import os
-
 from tinydb import Query
 from models.player import Player
 

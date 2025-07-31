@@ -1,5 +1,3 @@
-import os
-
 from tinydb import Query, where
 from models.tournament import Tournament
 
@@ -8,7 +6,6 @@ class TournamentRepository:
     def __init__(self, db):
         self.db = db
         self.TournamentQuery = Query()
-
 
     def add(self, tournament: Tournament):
         """Ajoute un Tournoi à la base de donnée"""
