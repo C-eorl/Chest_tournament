@@ -1,3 +1,5 @@
+import random
+
 from models.match import Match
 from models.round import Round
 from models.tournament import Tournament
@@ -30,7 +32,7 @@ class ControllerCurrentTournament:
                 return False
         if self.target.statut == "finished":
             self.target = None
-            "Fin du menu tournoi en cours"
+            self.view.display_message("Fin du menu tournoi en cours")
             return False
         if not self.target.list_participant:
             self.view.display_message("Ce tournoi n'a aucun participant. Retour au menu précédent.")
@@ -194,12 +196,16 @@ class ControllerCurrentTournament:
             self.target.classement[player] = 0.0
 
     def sorted_list_participant(self):
-        """renvoie une liste des participants triée par ordre décroissant"""
-        sorted_list = dict(sorted(self.target.classement.items(), key=lambda x: x[1], reverse=True))
-        list_player = []
-        for player in sorted_list.keys():
-            list_player.append(player)
-        return list_player
+        """renvoie une liste des participants mélanger ou triée par ordre décroissant selon si c'est le 1er Round"""
+        if len(self.target.rounds) == 1:
+            # mélange aléatoire si 1er round
+            list_player = self.target.list_participant[:]
+            random.shuffle(list_player)
+            return list_player
+        else:
+            # tri par score
+            sorted_list = dict(sorted(self.target.classement.items(), key=lambda x: x[1], reverse=True))
+            return list(sorted_list.keys())
 
     def round_generator(self):
         """
